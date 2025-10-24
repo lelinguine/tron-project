@@ -1,10 +1,20 @@
-# ENVIRONNEMENT
+# Projet Tron - Groupe 2
+
+## Étudiants
+
+- Marc Arold Rosemond
+- Ayla Dione
+- Leo Jacquet
+- Kylian Deschamps
+- Valentin Luginbuhl
+
+## ENVIRONNEMENT
 source ./LaunchCordova.sh
 
-# RUN
+## RUN
 cordova run browser
 
-# SERVER
+## SERVER
 cd ./server
 npm install
 node Server.js
