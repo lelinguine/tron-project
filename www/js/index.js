@@ -24,6 +24,19 @@ document.addEventListener('deviceready', onDeviceReady, false);
 function onDeviceReady() {
     // Cordova is now initialized. Have fun!
 
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
     document.getElementById('deviceready').classList.add('ready');
+
+    // Say now we will try to connect using WebSocket
+    document.getElementById('WebSocketStatus').innerText = "Try to connect using WebSocket";
+
+    // Create the Web socket !
+    const ws = new WebSocket('ws://localhost:9898/');
+    ws.onopen = function() {
+        console.log('WebSocket Client Connected');
+        ws.send('Hi this is web client.');
+    };
+    ws.onmessage = function(e) {
+        console.log("Received: '" + e.data + "'");
+        document.getElementById('WebSocketStatus').innerText = "Received from server :" + e.data;
+    };
 }
