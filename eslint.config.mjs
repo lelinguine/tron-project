@@ -8,7 +8,7 @@ export default defineConfig([
         plugins: { js },
         extends: ['js/recommended'],
         languageOptions: { globals: globals.browser },
-        ignores: ['server/', 'platforms/'],
+        ignores: ['server/*', 'platforms/*'],
         rules: {
             'no-unused-vars': 'error',
             'no-var': 'error',
