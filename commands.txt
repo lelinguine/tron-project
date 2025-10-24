@@ -1,0 +1,11 @@
+# ENVIRONNEMENT
+source ./LaunchCordova.sh
+
+# PROJECT
+cordova create test
+cd test
+cordova platform add android
+cordova platform add browser
+
+cordova build android
+cordova run browser
