@@ -1,4 +1,3 @@
-// Node.js WebSocket server script
 const http = require('http');
 const WebSocketServer = require('websocket').server;
 
@@ -17,7 +16,7 @@ wsServer.on('request', function (request) {
         connection.sendUTF('Hi this is WebSocket server!');
     });
 
-    connection.on('close', function (reasonCode, description) {
+    connection.on('close', function () {
         console.log('Client has disconnected.');
     });
 });
