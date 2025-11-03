@@ -17,4 +17,4 @@ cordova run browser
 ## SERVER
 cd ./server
 npm install
-node Server.js
+npm run dev
