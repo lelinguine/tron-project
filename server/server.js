@@ -1,7 +1,15 @@
-const http = require('http');
-const WebSocketServer = require('websocket').server;
+import { createServer } from 'http';
+import { login } from './src/controllers/authController';
+import { server as WebSocketServer } from 'websocket';
 
-const server = http.createServer();
+const server = createServer((req, res) => {
+    if (req.url === '/login') {
+        login(req, res);
+    } else {
+        res.writeHead(404);
+        res.end('Not found.');
+    }
+});
 server.listen(9898);
 
 const wsServer = new WebSocketServer({
@@ -13,7 +21,7 @@ wsServer.on('request', function (request) {
 
     connection.on('message', function (message) {
         console.log('Received Message:', message.utf8Data);
-        connection.sendUTF('Hi this is WebSocket server!');
+        request.send('Hi this is WebSocket server!');
     });
 
     connection.on('close', function () {

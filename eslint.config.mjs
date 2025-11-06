@@ -15,5 +15,5 @@ export default defineConfig([
             'prefer-const': 'error'
         }
     },
-    { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } }
+    { files: ['**/*.js'], languageOptions: { sourceType: 'module' } }
 ]);
