@@ -1,4 +1,4 @@
-import { Schema, model, models } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 /**
  * Le schémas de l'utilisateur.
@@ -19,6 +19,6 @@ const UserSchema = new Schema(
  * @export
  * @type {import('mongoose').Model<{ username: string, password: string, createdAt: Date, updatedAt: Date }>}
  */
-const User = models.User ?? model('User', UserSchema);
+const User = mongoose.models.User ?? model('User', UserSchema);
 
 export default User;

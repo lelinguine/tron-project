@@ -1,5 +1,5 @@
 import { hash } from 'bcrypt';
-import User from '../schemas/User';
+import User from '../schemas/User.js';
 
 /**
  * Récupère un utilisateur depuis son nom d'utilisateur.
@@ -24,13 +24,12 @@ export function getUserByName(username) {
  * @export
  * @param {string} username - Le nom de l'utilisateur.
  * @param {string} password - Le mot de passe de l'utilisateur.
- * @return {Promise<boolean>} `true` si l'utilisateur a été créé, `false` sinon.
+ * @return {Promise<User | null>} L'utilisateur a été créé, `null` sinon.
  */
 export async function createUser(username, password) {
     try {
         // Création de l'utilisateur
-        await User.create({ username, password: await hash(password, 10) });
-        return true;
+        return await User.create({ username, password: await hash(password, 10) });
     } catch (error) {
         // Log error
         console.error('Error at createUser:', error);

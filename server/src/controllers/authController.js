@@ -1,20 +1,30 @@
 import { compare } from 'bcrypt';
-import connectDb from '../lib/db';
-import { createUser, getUserByName } from '../lib/user';
-import { parseBody } from '../utils/http';
+import connectDb from '../lib/db.js';
+import { createUser, getUserByName } from '../lib/user.js';
+import { parseBody } from '../utils/http.js';
+
+/**
+ * @export
+ * @type {Record<string, (req: import("http").IncomingMessage, res: import("http").ServerResponse) => Promise<void>}
+ */
+const authController = {
+    ['/login']: login
+};
+
+export default authController;
 
 /**
  * Gère les requêtes à `/login`
  *
- * @export
  * @param {import('http').IncomingMessage} req - La requête.
  * @param {import('http').ServerResponse} res - La réponse.
  */
-export async function login(req, res) {
+async function login(req, res) {
+    res.setHeader('Content-Type', 'application/json');
     // Vérification de la méthode
     if (req.method !== 'POST') {
-        res.writeHead(405, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+        res.writeHead(405);
+        res.end(JSON.stringify({ error: 'Méthode non autorisée.' }));
         return;
     }
 
@@ -22,17 +32,16 @@ export async function login(req, res) {
     let payload;
     try {
         payload = JSON.parse((await parseBody(req)) ?? '{}');
-    } catch (e) {
-        console.error('Invalid JSON:', e);
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Invalid JSON' }));
+    } catch {
+        res.writeHead(400);
+        res.end(JSON.stringify({ error: 'Corp de la requête invalide.' }));
         return;
     }
 
     const { username, password } = payload;
     if (!username || !password) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Missing username or password' }));
+        res.writeHead(400);
+        res.end(JSON.stringify({ error: "Aucun nom d'utilisateur ou mot de passe renseigné." }));
         return;
     }
 
@@ -40,22 +49,34 @@ export async function login(req, res) {
         // Connection à la BD
         await connectDb();
 
-        const user = await getUserByName(username);
+        let user = await getUserByName(username);
 
-        // Création de l'utilisateur si il n'existe pas
+        // Création de l'utilisateur si il n'existe pasF
         if (!user) {
-            const created = await createUser(username, password);
-            if (!created) {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Error while creating user' }));
+            // Vérification du mot de passe
+            if (!user) {
+                res.writeHead(400);
+                res.end(
+                    JSON.stringify({
+                        error: 'Le mot de passe doit faire entre 4 et 16 caractères.'
+                    })
+                );
+                return;
+            }
+
+            // Création de l'utilisateur
+            user = await createUser(username, password);
+            if (!user) {
+                res.writeHead(500);
+                res.end(JSON.stringify({ error: "Erreur lors de la création de l'utilisateur" }));
                 return;
             }
         } else {
             // Vérification du mot de passe
             const match = await compare(password, user.password);
             if (!match) {
-                res.writeHead(401, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Invalid credentials' }));
+                res.writeHead(401);
+                res.end(JSON.stringify({ error: 'Mot de passe incorrect.' }));
                 return;
             }
         }
@@ -63,11 +84,11 @@ export async function login(req, res) {
         // Succès
         const safeUser = { username: user.username, createdAt: user.createdAt };
 
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200);
         res.end(JSON.stringify({ ok: true, user: safeUser }));
     } catch (error) {
         console.error('Error in login handler:', error);
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Internal Server Error' }));
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: 'Erreur serveur.' }));
     }
 }

@@ -1,8 +1,7 @@
 import { connect } from 'mongoose';
 
 // Récupération de l'URI de la BD
-// TODO: mongo URI
-const MONGO_URI = '';
+const MONGO_URI = process.env.MONGO_URI || '';
 if (!MONGO_URI) {
     throw new Error('The MongoDB connection string is missing.');
 }
