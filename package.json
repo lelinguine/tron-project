@@ -25,5 +25,9 @@
       "android",
       "browser"
     ]
+  },
+  "dependencies": {
+    "generate-schema": "^2.6.0",
+    "mongoose": "^8.19.4"
   }
 }
