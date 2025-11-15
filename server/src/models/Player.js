@@ -1,25 +1,47 @@
-import { Mongoose } from "mongoose";
-const generateSchema = require("generate-schema");
-const player_json = {
-  $schema: "http://json-schema.org/draft-07/schema#",
-  $id: "PlayerRegistration",
-  title: "Player Registration",
-  description: "Schema pour l'enregistrement d'un nouveau joueur",
-  type: "object",
-  properties: {
+import mongoose from "mongoose";
+
+const PlayerSchema = new mongoose.Schema(
+  {
     pseudo: {
-      type: "string",
-      minLength: 3,
-      maxLength: 20,
-      pattern: "^[a-zA-Z0-9_-]+$",
-      description: "Pseudo du joueur (alphanumerique, tirets, underscores)",
+      type: String,
+      required: true,
+      unique: true,
+      minlength: 3,
+      maxlength: 20,
+      match: /^[a-zA-Z0-9_-]+$/,
+      trim: true,
+      index: true,
+    },
+
+    stats: {
+      gamesPlayed: {
+        type: Number,
+        default: 0,
+      },
+      gamesWon: {
+        type: Number,
+        default: 0,
+      },
+      totalScore: {
+        type: Number,
+        default: 0,
+      },
+    },
+
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
+
+    currentGameId: {
+      type: String,
+      default: null,
     },
   },
-  required: ["pseudo"],
-  additionalProperties: false,
-};
-const playerSchema = generateSchema.mongoose(player_json);
+  {
+    timestamps: true,
+    collection: "players",
+  }
+);
 
-const PlayerSchema = new Mongoose.Schema(playerSchema);
-
-export const Player = Mongoose.model("Player", PlayerSchema);
+export const Player = mongoose.model("Player", PlayerSchema);

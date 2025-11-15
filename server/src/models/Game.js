@@ -1,78 +1,75 @@
-import { Mongoose } from "mongoose";
-const generateSchema = require("generate-schema"); // je prends ce pachage pour generer le schema mongoose à partir du json schema; je l' ai pris directement dans le excel
-const game_json = {
-  $schema: "http://json-schema.org/draft-07/schema#",
-  $id: "GameState",
-  title: "Game State",
-  description: "État complet du jeu à chaque tick",
-  type: "object",
-  properties: {
+import mongoose from "mongoose";
+
+const GameSchema = new mongoose.Schema(
+  {
     gameId: {
-      type: "string",
-      description: "ID unique de la partie",
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
     },
+
     tick: {
-      type: "integer",
-      minimum: 0,
-      description: "Numéro du tick courant",
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
     },
+
     timestamp: {
-      type: "integer",
-      description: "Timestamp Unix en millisecondes",
+      type: Number,
+      required: true,
+      default: () => Date.now(),
     },
+
     players: {
-      type: "object",
-      patternProperties: {
-        "^[a-f0-9]{24}$": {
-          type: "object",
-          properties: {
-            position: {
-              type: "object",
-              properties: {
-                x: { type: "integer", minimum: 0 },
-                y: { type: "integer", minimum: 0 },
-              },
-              required: ["x", "y"],
+      type: Map,
+      of: new mongoose.Schema(
+        {
+          position: {
+            x: {
+              type: Number,
+              required: true,
+              min: 0,
             },
-            direction: {
-              type: "string",
-              enum: ["UP", "DOWN", "LEFT", "RIGHT"],
-            },
-            alive: {
-              type: "boolean",
-            },
-            color: {
-              type: "string",
-              pattern: "^#[0-9A-Fa-f]{6}$",
+            y: {
+              type: Number,
+              required: true,
+              min: 0,
             },
           },
-          required: ["position", "direction", "alive", "color"],
+          direction: {
+            type: String,
+            required: true,
+            enum: ["UP", "DOWN", "LEFT", "RIGHT"],
+          },
+          alive: {
+            type: Boolean,
+            required: true,
+            default: true,
+          },
+          color: {
+            type: String,
+            required: true,
+            match: /^#[0-9A-Fa-f]{6}$/,
+          },
         },
-      },
+        { _id: false }
+      ),
+      required: true,
     },
+
     trails: {
-      type: "object",
-      description: "Map des trails par joueur: {playerId: [[x,y], [x,y]]}",
-      patternProperties: {
-        "^[a-f0-9]{24}$": {
-          type: "array",
-          items: {
-            type: "array",
-            items: { type: "integer" },
-            minItems: 2,
-            maxItems: 2,
-          },
-        },
-      },
+      type: Map,
+      of: [[Number]],
+      required: true,
+      default: new Map(),
     },
   },
-  required: ["gameId", "tick", "timestamp", "players", "trails"],
-};
+  {
+    timestamps: true,
+    collection: "games",
+  }
+);
 
-const jsonData = game_json.body;
-
-const MongooseSchema = generateSchema.mongoose(jsonData);
-
-const GameSchema = new Mongoose.Schema(MongooseSchema);
-
-export const Game = Mongoose.model("Game", GameSchema);
+export const Game = mongoose.model("Game", GameSchema);

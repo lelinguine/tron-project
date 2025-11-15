@@ -9,7 +9,7 @@ import {
 const createGameRequest = async (req, res) => {
   try {
     const gameData = req.body;
-    createGame(gameData);
+    await createGame(gameData);
     res.status(200).send("Nouveau jeu crée avec succès");
   } catch (error) {
     res.status(500).send(error.message);
@@ -19,7 +19,7 @@ const createGameRequest = async (req, res) => {
 const getGameRequest = async (req, res) => {
   try {
     const gameId = req.body.gameId;
-    const game = getGameById(gameId);
+    const game = await getGameById(gameId);
     res.status(200).json(game);
   } catch (err) {
     res.status(500).send(err.message);
@@ -28,7 +28,7 @@ const getGameRequest = async (req, res) => {
 
 const getGamesRequest = async (req, res) => {
   try {
-    const games = getGames();
+    const games = await getGames();
     res.status(200).json(games);
   } catch (error) {
     res.status(500).send(error.message);
@@ -38,7 +38,7 @@ const getGamesRequest = async (req, res) => {
 const updateGameRequest = async (req, res) => {
   try {
     const gameId = req.body.gameId;
-    const game = updateGame(gameId);
+    const game = await updateGame(gameId);
     res.status(200).json(game);
   } catch (error) {
     res.status(500).send(error.message);
@@ -48,7 +48,7 @@ const updateGameRequest = async (req, res) => {
 const deleteGameRequest = async (req, res) => {
   try {
     const gameId = req.body.gameId;
-    const game = deleteGame(gameId);
+    const game = await deleteGame(gameId);
     res.status(200).json(game);
   } catch (error) {
     res.status(500).send(error.message);
