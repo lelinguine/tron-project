@@ -276,10 +276,6 @@ export const calculateSurvivalTime = (startTime, eliminationTime) => {
 
 // ===== FONCTIONS MISE À JOUR DU JEU =====
 
-/**
- * Traiter les mouvements de tous les joueurs
- * @param {Object} gameState
- */
 export const processPlayerMovements = (gameState) => {
   const alivePlayers = getAlivePlayers(gameState.players);
 

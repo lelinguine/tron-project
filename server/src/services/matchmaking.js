@@ -43,7 +43,10 @@ const formMatchIfPossible = () => {
 
     if (players.length < matchSize) {
       players.forEach((player) =>
-        waitingPlayers.set(player.pseudo, { pseudo: player.pseudo, joinedAt: Date.now() })
+        waitingPlayers.set(player.pseudo, {
+          pseudo: player.pseudo,
+          joinedAt: Date.now(),
+        })
       );
       break;
     }

@@ -12,8 +12,8 @@ export const listGames = async (req, res) => {
     const games = await getRecentGames(limit);
     res.json({ games });
   } catch (error) {
-    logger.error("Unable to list games", error);
-    res.status(500).json({ message: "Unable to list games" });
+    logger.error("Erreur dans le retrieve des jeus", error);
+    res.status(500).json({ message: "Incapable de lister les jeux" });
   }
 };
 
@@ -22,13 +22,13 @@ export const getGame = async (req, res) => {
     const game = await getGameByRoomId(req.params.roomId);
 
     if (!game) {
-      return res.status(404).json({ message: "Game not found" });
+      return res.status(404).json({ message: "Jeu non trouvé" });
     }
 
     res.json({ game });
   } catch (error) {
-    logger.error("Unable to retrieve game", error);
-    res.status(500).json({ message: "Unable to retrieve game" });
+    logger.error("Erreur dans le retrieve le jeu en question", error);
+    res.status(500).json({ message: "Incapable de lister le jeu" });
   }
 };
 

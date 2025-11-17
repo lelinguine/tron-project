@@ -36,7 +36,7 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    logger.error("Login failed", error);
+    logger.error("Erreur dans le login", error);
     res.status(500).json({ message: "Unable to login" });
   }
 };

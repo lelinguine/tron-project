@@ -1,53 +1,291 @@
 <!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tron Game Client</title>
+  </head>
+  <body>
+    <h1>Tron Game</h1>
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    <!-- Login Section -->
+    <div id="loginSection">
+      <h2>Login</h2>
+      <input
+        type="text"
+        id="pseudoInput"
+        placeholder="Enter pseudo (3-20 chars)"
+        maxlength="20"
+      />
+      <button onclick="login()">Login</button>
+      <p id="loginStatus"></p>
+    </div>
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-        <meta http-equiv="Content-Security-Policy" content="connect-src *; default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;script-src 'self' http://* 'unsafe-inline' 'unsafe-eval' ;">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-        <meta name="color-scheme" content="light dark">
-        <link rel="stylesheet" href="css/index.css">
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-            <h1>WebSocket</h1>
-            <p id="WebSocketStatus">Waiting for cordova to initialize</p>
-        </div>
-        <script src="cordova.js"></script>
-        <script src="js/index.js"></script>
-    </body>
+    <!-- Queue Section -->
+    <div id="queueSection" style="display:none;">
+      <h2>Matchmaking</h2>
+      <button onclick="joinQueue()">Join Queue</button>
+      <button onclick="leaveQueue()">Leave Queue</button>
+      <p id="queueStatus"></p>
+    </div>
+
+    <!-- Game Section -->
+    <div id="gameSection" style="display:none;">
+      <h2>Game</h2>
+      <p id="gameStatus"></p>
+      <canvas id="gameCanvas" width="500" height="500"></canvas>
+      <p>Use Arrow Keys to control</p>
+      <div id="playersList"></div>
+    </div>
+
+    <!-- Stats Section -->
+    <div id="statsSection" style="display:none;">
+      <h2>Game Over</h2>
+      <p id="winnerText"></p>
+      <div id="rankings"></div>
+      <button onclick="backToQueue()">Play Again</button>
+    </div>
+
+    <script>
+          // Use relative URLs since we're served from the same origin
+         const API_URL = 'http://127.0.0.1:9898/api';
+      const WS_URL = `ws://127.0.0.1:9898`;
+
+          let playerId = null;
+          let pseudo = null;
+          let ws = null;
+          let currentRoom = null;
+          let gameConfig = null;
+          let canvas = null;
+          let ctx = null;
+
+          // Login
+          async function login() {
+              const input = document.getElementById('pseudoInput').value.trim();
+              if (!input) return;
+
+              try {
+                  const res = await fetch(`${API_URL}/auth/login`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ pseudo: input })
+                  });
+
+                  const data = await res.json();
+
+                  if (res.ok) {
+                      playerId = data.player.id;
+                      pseudo = data.player.pseudo;
+                      document.getElementById('loginStatus').textContent = `Logged in as ${pseudo}`;
+                      document.getElementById('loginSection').style.display = 'none';
+                      document.getElementById('queueSection').style.display = 'block';
+                      connectWebSocket();
+                  } else {
+                      document.getElementById('loginStatus').textContent = data.message;
+                  }
+              } catch (error) {
+                  document.getElementById('loginStatus').textContent = 'Connection error';
+              }
+          }
+
+          // WebSocket
+          function connectWebSocket() {
+              ws = new WebSocket(`${WS_URL}?pseudo=${pseudo}`);
+
+              ws.onopen = () => {
+                  console.log('WebSocket connected');
+              };
+
+              ws.onmessage = (event) => {
+                  const msg = JSON.parse(event.data);
+                  handleWebSocketMessage(msg);
+              };
+
+              ws.onerror = (error) => {
+                  console.error('WebSocket error:', error);
+              };
+
+              ws.onclose = () => {
+                  console.log('WebSocket closed');
+              };
+          }
+
+          function handleWebSocketMessage(msg) {
+              console.log('Received:', msg);
+
+              switch(msg.type) {
+                  case 'HELLO_ACK':
+                      gameConfig = msg.config;
+                      break;
+
+                  case 'QUEUE_ACK':
+                      document.getElementById('queueStatus').textContent =
+                          `In queue (${msg.queueSize} players)`;
+                      break;
+
+                  case 'QUEUE_STATUS':
+                      document.getElementById('queueStatus').textContent =
+                          `Position: ${msg.position}/${msg.size}`;
+                      break;
+
+                  case 'QUEUE_LEFT':
+                      document.getElementById('queueStatus').textContent = 'Left queue';
+                      break;
+
+                  case 'MATCH_FOUND':
+                      currentRoom = msg.roomId;
+                      document.getElementById('queueStatus').textContent = 'Match found!';
+                      break;
+
+                  case 'GAME_STARTING':
+                      showGameSection();
+                      setupCanvas(msg.config);
+                      displayPlayers(msg.players);
+                      document.getElementById('gameStatus').textContent =
+                          `Game starting in ${msg.countdown}s...`;
+                      break;
+
+                  case 'GAME_STARTED':
+                      document.getElementById('gameStatus').textContent = 'Game in progress';
+                      break;
+
+                  case 'GAME_STATE':
+                      renderGame(msg.data);
+                      break;
+
+                  case 'PLAYER_ELIMINATED':
+                      document.getElementById('gameStatus').textContent =
+                          `${msg.pseudo} eliminated (${msg.reason}). ${msg.remainingPlayers} left`;
+                      break;
+
+                  case 'GAME_OVER':
+                      showGameOver(msg);
+                      break;
+
+                  case 'ERROR':
+                      alert(`Error: ${msg.message}`);
+                      break;
+              }
+          }
+
+          // Queue
+          function joinQueue() {
+              if (ws && ws.readyState === WebSocket.OPEN) {
+                  ws.send(JSON.stringify({ type: 'JOIN_QUEUE' }));
+              }
+          }
+
+          function leaveQueue() {
+              if (ws && ws.readyState === WebSocket.OPEN) {
+                  ws.send(JSON.stringify({ type: 'LEAVE_QUEUE' }));
+              }
+          }
+
+          // Game Display
+          function showGameSection() {
+              document.getElementById('queueSection').style.display = 'none';
+              document.getElementById('gameSection').style.display = 'block';
+              document.getElementById('statsSection').style.display = 'none';
+          }
+
+          function setupCanvas(config) {
+              canvas = document.getElementById('gameCanvas');
+              ctx = canvas.getContext('2d');
+
+              const cellSize = Math.min(
+                  canvas.width / config.largeur,
+                  canvas.height / config.hauteur
+              );
+
+              canvas.width = config.largeur * cellSize;
+              canvas.height = config.hauteur * cellSize;
+          }
+
+          function displayPlayers(players) {
+              const list = document.getElementById('playersList');
+              list.innerHTML = '<h3>Players:</h3>' + players.map(p =>
+                  `<p style="color:${p.color}">${p.pseudo}</p>`
+              ).join('');
+          }
+
+          function renderGame(state) {
+              if (!canvas || !ctx) return;
+
+              const cellW = canvas.width / state.config.largeur;
+              const cellH = canvas.height / state.config.hauteur;
+
+              // Clear canvas
+              ctx.fillStyle = '#000';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+              // Draw players
+              state.players.forEach(player => {
+                  ctx.fillStyle = player.color;
+                  ctx.fillRect(
+                      player.x * cellW,
+                      player.y * cellH,
+                      cellW,
+                      cellH
+                  );
+              });
+          }
+
+          // Controls
+          document.addEventListener('keydown', (e) => {
+              if (!ws || ws.readyState !== WebSocket.OPEN || !currentRoom) return;
+
+              let direction = null;
+
+              switch(e.key) {
+                  case 'ArrowUp':
+                      direction = 'UP';
+                      break;
+                  case 'ArrowDown':
+                      direction = 'DOWN';
+                      break;
+                  case 'ArrowLeft':
+                      direction = 'LEFT';
+                      break;
+                  case 'ArrowRight':
+                      direction = 'RIGHT';
+                      break;
+              }
+
+              if (direction) {
+                  e.preventDefault();
+                  ws.send(JSON.stringify({
+                      type: 'PLAYER_INPUT',
+                      direction: direction
+                  }));
+              }
+          });
+
+          // Game Over
+          function showGameOver(msg) {
+              document.getElementById('gameSection').style.display = 'none';
+              document.getElementById('statsSection').style.display = 'block';
+
+              document.getElementById('winnerText').textContent =
+                  msg.winner ? `Winner: ${msg.winner}` : 'Draw!';
+
+              const rankings = document.getElementById('rankings');
+              rankings.innerHTML = '<h3>Rankings:</h3>' +
+                  msg.rankings.map(r =>
+                      `<p>${r.position}. ${r.pseudo} - ${(r.survivalTime / 1000).toFixed(1)}s</p>`
+                  ).join('');
+
+              currentRoom = null;
+          }
+
+          function backToQueue() {
+              document.getElementById('statsSection').style.display = 'none';
+              document.getElementById('queueSection').style.display = 'block';
+          }
+
+          // Allow Enter key for login
+          document.getElementById('pseudoInput').addEventListener('keypress', (e) => {
+              if (e.key === 'Enter') login();
+          });
+    </script>
+  </body>
 </html>
