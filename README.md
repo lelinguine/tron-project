@@ -17,6 +17,9 @@ cd ./server
 npm install
 ```
 ```bash
+cp .env-example .env
+```
+```bash
 node src/scripts/seed.js
 ```
 ```bash
