@@ -1,64 +1,48 @@
 import {
-  createGame,
-  getGames,
-  getGameById,
-  updateGame,
-  deleteGame,
-} from "../repositories/gameRepository";
+  deleteGameByRoomId,
+  getGameByRoomId,
+  getRecentGames,
+} from "../repositories/gameRepository.js";
+import { logger } from "../utils/logger.js";
+import { parseLimit } from "../utils/helpers.js";
 
-const createGameRequest = async (req, res) => {
+export const listGames = async (req, res) => {
   try {
-    const gameData = req.body;
-    await createGame(gameData);
-    res.status(200).send("Nouveau jeu crée avec succès");
+    const limit = parseLimit(req.query.limit, { fallback: 10, max: 50 });
+    const games = await getRecentGames(limit);
+    res.json({ games });
   } catch (error) {
-    res.status(500).send(error.message);
+    logger.error("Unable to list games", error);
+    res.status(500).json({ message: "Unable to list games" });
   }
 };
 
-const getGameRequest = async (req, res) => {
+export const getGame = async (req, res) => {
   try {
-    const gameId = req.body.gameId;
-    const game = await getGameById(gameId);
-    res.status(200).json(game);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-};
+    const game = await getGameByRoomId(req.params.roomId);
 
-const getGamesRequest = async (req, res) => {
-  try {
-    const games = await getGames();
-    res.status(200).json(games);
+    if (!game) {
+      return res.status(404).json({ message: "Game not found" });
+    }
+
+    res.json({ game });
   } catch (error) {
-    res.status(500).send(error.message);
+    logger.error("Unable to retrieve game", error);
+    res.status(500).json({ message: "Unable to retrieve game" });
   }
 };
 
-const updateGameRequest = async (req, res) => {
+export const deleteGame = async (req, res) => {
   try {
-    const gameId = req.body.gameId;
-    const game = await updateGame(gameId);
-    res.status(200).json(game);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
+    const deleted = await deleteGameByRoomId(req.params.roomId);
 
-const deleteGameRequest = async (req, res) => {
-  try {
-    const gameId = req.body.gameId;
-    const game = await deleteGame(gameId);
-    res.status(200).json(game);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
+    if (!deleted) {
+      return res.status(404).json({ message: "Game not found" });
+    }
 
-export const gameRequests = {
-  createGameRequest,
-  getGameRequest,
-  getGamesRequest,
-  updateGameRequest,
-  deleteGameRequest,
+    res.json({ message: "Game deleted" });
+  } catch (error) {
+    logger.error("Unable to delete game", error);
+    res.status(500).json({ message: "Unable to delete game" });
+  }
 };
