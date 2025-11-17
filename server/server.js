@@ -2,7 +2,6 @@ import { createServer } from 'http';
 import { login } from './src/controllers/authController';
 import { server as WebSocketServer } from 'websocket';
 
-<<<<<<< Updated upstream
 const server = createServer((req, res) => {
     if (req.url === '/login') {
         login(req, res);
@@ -12,11 +11,9 @@ const server = createServer((req, res) => {
     }
 });
 server.listen(9898);
-=======
 const PORT = process.env.PORT || 9898;
 const server = http.createServer();
 server.listen(PORT, () => console.log(`Server listening on ${PORT}`));
->>>>>>> Stashed changes
 
 const wsServer = new WebSocketServer({
     httpServer: server
@@ -53,10 +50,8 @@ wsServer.on('request', function (request) {
     console.log('New connection accepted');
 
     connection.on('message', function (message) {
-<<<<<<< Updated upstream
         console.log('Received Message:', message.utf8Data);
         request.send('Hi this is WebSocket server!');
-=======
         if (message.type !== 'utf8') return;
         let msg;
         try {
@@ -143,7 +138,6 @@ wsServer.on('request', function (request) {
                 console.log('Unknown message type:', msg.type);
                 send(connection, { type: 'error', reason: 'unknown_type' });
         }
->>>>>>> Stashed changes
     });
 
     connection.on('close', function () {
