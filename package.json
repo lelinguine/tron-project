@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "generate-schema": "^2.6.0",
-    "mongoose": "^8.19.4"
+    "mongoose": "^8.19.4",
+    "uuid": "^13.0.0"
   }
 }
