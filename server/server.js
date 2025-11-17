@@ -4,6 +4,8 @@ import { server as WebSocketServer } from 'websocket';
 import { PORT } from './src/config.js';
 import authController from './src/controllers/authController.js';
 
+import { handleLogin } from './src/controllers/authController.js';
+
 const server = createServer((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -37,11 +39,6 @@ wsServer.on('request', function (request) {
     const connection = request.accept(null, request.origin);
 
     connection.on('message', async function (message) {
-        // console.log('Received Message:', message.utf8Data);
-        // request.send('Hi this is WebSocket server!');
-
-
-
         try {
             const data = JSON.parse(message.utf8Data);
             
@@ -52,11 +49,6 @@ wsServer.on('request', function (request) {
         } catch (error) {
             connection.send(JSON.stringify({ error: 'Message invalide' }));
         }
-
-        
-
-
-
     });
 
     connection.on('close', function () {
