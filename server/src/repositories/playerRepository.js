@@ -1,27 +1,56 @@
-import { Player } from "../models/Player";
+import { Player } from "../models/Player.js";
 
-const createPlayer = async (playerData) => {
+export const createPlayer = async (playerData) => {
   const player = new Player(playerData);
-  return await player.save();
+  return player.save();
 };
 
-const getPlayerById = async (playerId) => {
-  return await Player.findById(playerId);
+export const getPlayerById = async (playerId) => {
+  return Player.findById(playerId);
 };
-const addPlayer = async (playerData) => {
-  const player = new Player(playerData);
-  return await player.save();
+
+export const getPlayerByPseudo = async (pseudo) => {
+  return Player.findOne({ pseudo });
 };
-const updatePlayer = async (playerId, updateData) => {
-  return await Player.findByIdAndUpdate(playerId, updateData, { new: true });
+
+export const upsertPlayer = async (pseudo) => {
+  return Player.findOneAndUpdate(
+    { pseudo },
+    { $setOnInsert: { pseudo } },
+    { upsert: true, new: true }
+  );
 };
-const deletePlayer = async (playerId) => {
-  return await Player.findByIdAndDelete(playerId);
+
+export const setPlayerOnlineStatus = async (pseudo, isOnline) => {
+  return Player.findOneAndUpdate(
+    { pseudo },
+    {
+      isOnline,
+      ...(isOnline ? {} : { currentGameId: null }),
+    },
+    { new: true }
+  );
 };
-export const playerRepository = {
-  createPlayer,
-  getPlayerById,
-  addPlayer,
-  updatePlayer,
-  deletePlayer,
+
+export const updatePlayer = async (playerId, updateData) => {
+  return Player.findByIdAndUpdate(playerId, updateData, { new: true });
+};
+
+export const deletePlayer = async (playerId) => {
+  return Player.findByIdAndDelete(playerId);
+};
+
+export const updatePlayerStats = async (pseudo, { isWinner = false, score = 0 } = {}) => {
+  const update = {
+    $inc: {
+      "stats.gamesPlayed": 1,
+      "stats.totalScore": score,
+    },
+  };
+
+  if (isWinner) {
+    update.$inc["stats.gamesWon"] = 1;
+  }
+
+  return Player.findOneAndUpdate({ pseudo }, update, { new: true });
 };

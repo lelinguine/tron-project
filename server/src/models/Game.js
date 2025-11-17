@@ -1,69 +1,72 @@
 import mongoose from "mongoose";
 
+const PlayerResultSchema = new mongoose.Schema(
+  {
+    pseudo: {
+      type: String,
+      required: true,
+    },
+    position: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+    alive: {
+      type: Boolean,
+      default: false,
+    },
+    eliminatedAt: {
+      type: Date,
+      default: null,
+    },
+    eliminationReason: {
+      type: String,
+      default: null,
+    },
+    survivalTime: {
+      type: Number,
+      default: 0,
+    },
+    color: {
+      type: String,
+      default: "#FFFFFF",
+    },
+  },
+  { _id: false }
+);
+
 const GameSchema = new mongoose.Schema(
   {
-    gameId: {
+    roomId: {
       type: String,
       required: true,
       unique: true,
       index: true,
     },
-
-    tick: {
+    startedAt: {
+      type: Date,
+      required: true,
+    },
+    endedAt: {
+      type: Date,
+      required: true,
+    },
+    duration: {
       type: Number,
       required: true,
       min: 0,
-      default: 0,
     },
-
-    timestamp: {
-      type: Number,
-      required: true,
-      default: () => Date.now(),
+    gridSize: {
+      width: { type: Number, required: true, min: 1 },
+      height: { type: Number, required: true, min: 1 },
     },
-
+    winner: {
+      type: String,
+      default: null,
+    },
     players: {
-      type: Map,
-      of: new mongoose.Schema(
-        {
-          position: {
-            x: {
-              type: Number,
-              required: true,
-              min: 0,
-            },
-            y: {
-              type: Number,
-              required: true,
-              min: 0,
-            },
-          },
-          direction: {
-            type: String,
-            required: true,
-            enum: ["UP", "DOWN", "LEFT", "RIGHT"],
-          },
-          alive: {
-            type: Boolean,
-            required: true,
-            default: true,
-          },
-          color: {
-            type: String,
-            required: true,
-            match: /^#[0-9A-Fa-f]{6}$/,
-          },
-        },
-        { _id: false }
-      ),
-      required: true,
-    },
-
-    trails: {
-      type: Map,
-      of: [[Number]],
-      required: true,
-      default: new Map(),
+      type: [PlayerResultSchema],
+      default: [],
     },
   },
   {

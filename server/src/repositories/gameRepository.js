@@ -1,29 +1,21 @@
-import { Game } from "../models/Game";
+import { Game } from "../models/Game.js";
 
-const createGame = async (gameData) => {
-  const game = new Game(gameData);
-  return await game.save();
+export const saveGame = async (gameData) => {
+  return Game.findOneAndUpdate({ roomId: gameData.roomId }, gameData, {
+    new: true,
+    upsert: true,
+    setDefaultsOnInsert: true,
+  });
 };
 
-const getGames = async () => {
-  return await Game.find();
+export const getRecentGames = async (limit = 10) => {
+  return Game.find().sort({ startedAt: -1 }).limit(limit).lean();
 };
 
-const getGameById = async (gameId) => {
-  return await Game.findById(gameId);
+export const getGameByRoomId = async (roomId) => {
+  return Game.findOne({ roomId }).lean();
 };
 
-const updateGame = async (gameId, updateData) => {
-  return await Game.findByIdAndUpdate(gameId, updateData, { new: true });
-};
-const deleteGame = async (gameId) => {
-  return await Game.findByIdAndDelete(gameId);
-};
-export const gameRepository = {
-  createGame,
-  getGames,
-  getGameById,
-
-  updateGame,
-  deleteGame,
+export const deleteGameByRoomId = async (roomId) => {
+  return Game.findOneAndDelete({ roomId });
 };
