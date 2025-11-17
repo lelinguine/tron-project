@@ -219,7 +219,7 @@ export const checkHeadToHeadCollision = (players) => {
   });
 
   // Trouver les positions avec plusieurs joueurs
-  positions.forEach((pseudos, position) => {
+  positions.forEach((pseudos) => {
     if (pseudos.length > 1) {
       collisions.push(...pseudos);
     }
@@ -343,4 +343,24 @@ export const updateGameState = (gameState, inputs = []) => {
   }
 
   return gameState;
+};
+
+export const serializeGameState = (gameState) => {
+  return {
+    roomId: gameState.roomId,
+    tick: gameState.tick,
+    status: gameState.status,
+    players: gameState.players.map((player) => ({
+      pseudo: player.pseudo,
+      x: player.x,
+      y: player.y,
+      direction: player.direction,
+      alive: player.alive,
+      color: player.color,
+    })),
+    config: {
+      largeur: gameState.config.largeur,
+      hauteur: gameState.config.hauteur,
+    },
+  };
 };

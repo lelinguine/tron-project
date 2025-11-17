@@ -1,28 +1,32 @@
 import mongoose from "mongoose";
+import { logger } from "../utils/logger.js";
 
-const MONGODB_URI = "mongodb://127.0.0.1:27017/tron_game";
+const DEFAULT_URI = "mongodb://127.0.0.1:27017/tron_game";
 
 export const connectDatabase = async () => {
+  const uri = DEFAULT_URI;
+
   try {
-    await mongoose.connect(MONGODB_URI);
-    console.log("nous sonnes connectés à la base de données");
-    console.log(`Database: ${mongoose.connection.name}`);
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+    });
+    logger.info(`Connecté à la base MongoDB (${mongoose.connection.name})`);
   } catch (error) {
-    console.error("une erreur est survenue:", error);
+    logger.error("Incapable de se connecter a MongoDB", error);
     process.exit(1);
   }
 };
 
 mongoose.connection.on("disconnected", () => {
-  console.log("MongoDB disconnected");
+  logger.warn("MongoDB disconnected");
 });
 
 mongoose.connection.on("error", (err) => {
-  console.error(" MongoDB error:", err);
+  logger.error("MongoDB error", err);
 });
 
 process.on("SIGINT", async () => {
   await mongoose.connection.close();
-  console.log("MongoDB connection closed due to app termination");
+  logger.info("MongoDB connection closed due to app termination");
   process.exit(0);
 });
