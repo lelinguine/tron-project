@@ -8,30 +8,6 @@ function connect() {
     const username = document.getElementById('user_username').value;
     const password = document.getElementById('user_password').value;
 
-    // fetch('http://localhost:9898/login', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({ username, password })
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     console.log(data);
-    //     if (data.ok) {
-    //         document.getElementById('status').innerHTML = '<p>Login successful!</p>';
-    //         document.getElementById('status').classList.add('success');
-    //     } else {
-    //         document.getElementById('status').innerHTML = '<p>Login failed</p>';
-    //         document.getElementById('status').classList.add('failed');
-    //     }
-    // })
-    // .catch(error => {
-    //     console.error('Error:', error);
-    //     document.getElementById('status').innerHTML = '<p>An error occurred.</p>';
-    //     document.getElementById('status').classList.add('failed');
-    // });
-
     ws.send(JSON.stringify({
         type: 'login',
         username: username,
