@@ -42,16 +42,16 @@ wsServer.on('request', function (request) {
 
 
 
-        // try {
-        //     const data = JSON.parse(message.utf8Data);
+        try {
+            const data = JSON.parse(message.utf8Data);
             
-        //     if (data.type === 'login') {
-        //         const result = await handleLogin(data.username, data.password);
-        //         connection.send(JSON.stringify(result.data));
-        //     }
-        // } catch (error) {
-        //     connection.send(JSON.stringify({ error: 'Message invalide' }));
-        // }
+            if (data.type === 'login') {
+                const result = await handleLogin(data.username, data.password);
+                connection.send(JSON.stringify(result.data));
+            }
+        } catch (error) {
+            connection.send(JSON.stringify({ error: 'Message invalide' }));
+        }
 
         
 
