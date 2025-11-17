@@ -19,10 +19,12 @@ const wsServer = new WebSocketServer({
     httpServer: server
 });
 
+/*
 // In-memory games storage: gameId -> { players: Map(playerId->player) }
 const games = new Map();
 // Map connection -> { gameId, playerId }
 const connMeta = new Map();
+*/
 
 function genId(length = 6) {
     return Math.random().toString(36).slice(2, 2 + length);
@@ -36,6 +38,7 @@ function send(conn, obj) {
     }
 }
 
+/*
 function broadcastToGame(gameId, obj, exceptPlayerId) {
     const game = games.get(gameId);
     if (!game) return;
@@ -44,6 +47,7 @@ function broadcastToGame(gameId, obj, exceptPlayerId) {
         send(p.connection, obj);
     }
 }
+*/
 
 wsServer.on('request', function (request) {
     const connection = request.accept(null, request.origin);
@@ -62,7 +66,7 @@ wsServer.on('request', function (request) {
             return;
         }
 
-        // Simple protocol based on msg.type
+        // Simple protocole basé sur msg.type
         switch (msg.type) {
             case 'join': {
                 // msg: { type: 'join', gameId?: string, playerName?: string, position?: {x,y} }
@@ -86,7 +90,7 @@ wsServer.on('request', function (request) {
                 game.players.set(playerId, player);
                 connMeta.set(connection, { gameId: requestedGame, playerId });
 
-                // Send joined acknowledgement with current players
+                // AR de la connexion avec les joueurs actuels
                 const playersList = [];
                 for (const [pid, p] of game.players.entries()) {
                     playersList.push({ id: pid, name: p.name, position: p.position, direction: p.direction });
