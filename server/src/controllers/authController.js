@@ -1,73 +1,32 @@
 import { compare } from 'bcrypt';
-import connectDb from '../lib/db';
-import { createUser, getUserByName } from '../lib/user';
-import { parseBody } from '../utils/http';
+import connectDb from '../lib/db.js';
+import { createUser, getUserByName } from '../lib/user.js';
 
-/**
- * Gère les requêtes à `/login`
- *
- * @export
- * @param {import('http').IncomingMessage} req - La requête.
- * @param {import('http').ServerResponse} res - La réponse.
- */
-export async function login(req, res) {
-    // Vérification de la méthode
-    if (req.method !== 'POST') {
-        res.writeHead(405, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Method Not Allowed' }));
-        return;
-    }
-
-    // Récupération des données
-    let payload;
-    try {
-        payload = JSON.parse((await parseBody(req)) ?? '{}');
-    } catch (e) {
-        console.error('Invalid JSON:', e);
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Invalid JSON' }));
-        return;
-    }
-
-    const { username, password } = payload;
+export async function handleLogin(username, password) {
     if (!username || !password) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Missing username or password' }));
-        return;
+        return { status: 400, data: { error: "Aucun nom d'utilisateur ou mot de passe renseigné." } };
     }
 
     try {
-        // Connection à la BD
         await connectDb();
+        let user = await getUserByName(username);
 
-        const user = await getUserByName(username);
-
-        // Création de l'utilisateur si il n'existe pas
         if (!user) {
-            const created = await createUser(username, password);
-            if (!created) {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Error while creating user' }));
-                return;
+            user = await createUser(username, password);
+            if (!user) {
+                return { status: 500, data: { error: "Erreur lors de la création de l'utilisateur" } };
             }
         } else {
-            // Vérification du mot de passe
             const match = await compare(password, user.password);
             if (!match) {
-                res.writeHead(401, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Invalid credentials' }));
-                return;
+                return { status: 401, data: { error: 'Mot de passe incorrect.' } };
             }
         }
 
-        // Succès
         const safeUser = { username: user.username, createdAt: user.createdAt };
-
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: true, user: safeUser }));
+        return { status: 200, data: { ok: true, user: safeUser } };
     } catch (error) {
         console.error('Error in login handler:', error);
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Internal Server Error' }));
+        return { status: 500, data: { error: 'Erreur serveur.' } };
     }
 }

@@ -1,3 +1,7 @@
+// Config serveur
+export const PORT = 9898;
+
+// config du jeu
 export const GAME_WIDTH = 800;
 export const GAME_HEIGHT = 600;
 export const PLAYER_SPEED = 2;
