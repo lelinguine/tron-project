@@ -1,0 +1,11 @@
+assets:
+https://pixelfrog-assets.itch.io/tiny-swords
+
+font:
+https://fonts.google.com/specimen/Caprasimo
+
+grain:
+https://codepen.io/ValentinBossens/pen/BaKRwea
+
+inspiration:
+https://webflow.com/made-in-webflow/website/Kensington-Healing-Verse-or-Public-Art-and-Poetry-Project

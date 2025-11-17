@@ -1,5 +1,6 @@
+import 'dotenv/config';
 import connectDb from '../lib/db.js';
-import User from '../schemas/User.js';
+import { createUser } from '../lib/user.js';
 
 async function seed() {
     try {
@@ -7,11 +8,16 @@ async function seed() {
 
         // Ajout des joueurs
         for (let i = 0; i <= 5; i++) {
-            await User.create({ username: `player${i}`, password: 'password' });
+            await createUser(`player${i}`, 'password');
+            console.log(`player${i} créé`);
         }
+        
+        console.log('Seed terminé avec succès');
+        process.exit(0);
     } catch (error) {
         console.error("Erreur lors de l'ajout des données", error);
+        process.exit(1);
     }
 }
 
-export default seed();
+seed();

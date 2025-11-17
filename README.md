@@ -1,20 +1,26 @@
-# Projet Tron - Groupe 2
+# tron-projet
+blabla
 
-## Étudiants
+## Développeurs - Group 2
+- Marc Arold Rosemond : marc.arold-rosemond@etu.univ-grenoble-alpes.fr</br>
+- Ayla Dione : ayla.dione@etu.univ-grenoble-alpes.fr</br>
+- Leo Jacquet : leo.jacquet@etu.univ-grenoble-alpes.fr</br>
+- Kylian Deschamps : kylian.deschamps@etu.univ-grenoble-alpes.fr</br>
+- Valentin LUGINBUHL : valentin.luginbuhl@etu.univ-grenoble-alpes.fr</br>
 
-- Marc Arold Rosemond
-- Ayla Dione
-- Leo Jacquet
-- Kylian Deschamps
-- Valentin Luginbuhl
+# 💿 - Lunch *Server***
 
-## ENVIRONNEMENT
-source ./LaunchCordova.sh
-
-## RUN
-cordova run browser
-
-## SERVER
+```bash
 cd ./server
+```
+```bash
 npm install
-npm run dev
+```
+```bash
+node src/scripts/seed.js
+```
+```bash
+node server.js
+```
+
+# 🔧 CHANGELOG
