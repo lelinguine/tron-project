@@ -1,14 +1,9 @@
 const ws = new WebSocket('ws://localhost:9898');
 
 function connect() {
-
-
-    //récupérer input user_username et user_password
     const username = document.getElementById('user_username').value;
     const password = document.getElementById('user_password').value;
 
-
-    //utiliser fetch pour envoyer les données au serveur
     fetch('http://localhost:9898/login', {
         method: 'POST',
         headers: {
@@ -20,19 +15,18 @@ function connect() {
     .then(data => {
         console.log(data);
         if (data.ok) {
-            document.getElementById('loginStatus').innerText = 'Login successful! Welcome, ' + data.user.username;
+            document.getElementById('status').innerHTML = '<p>Login successful!</p>';
+            document.getElementById('status').classList.add('success');
         } else {
-            document.getElementById('loginStatus').innerText = 'Login failed: ' + data.error;
+            document.getElementById('status').innerHTML = '<p>Login failed</p>';
+            document.getElementById('status').classList.add('failed');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        document.getElementById('loginStatus').innerText = 'An error occurred during login.';
+        document.getElementById('status').innerHTML = '<p>An error occurred.</p>';
+        document.getElementById('status').classList.add('failed');
     });
-
-
-
-    
 }
 
 

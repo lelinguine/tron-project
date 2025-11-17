@@ -7,6 +7,8 @@
   --primary-color: #FCFEEF;
   --secondary-color: #469CA1;
   --third-color: #DBD8BE;
+  --success-color: #4CAF50;
+  --error-color: #F44336;
 }
 
 body {
@@ -17,9 +19,10 @@ body {
   background-color: black;
   user-select: none;
   color: var(--primary-color);
+  overflow: hidden;
 }
 
-h1, h2 {
+h1, h2, p, button {
   font-family: 'Caprasimo', sans-serif;
   margin: 0;
 }
@@ -34,34 +37,13 @@ h2 {
   text-shadow: 0 0 2px var(--primary-color), 0 0 4px var(--primary-color), 0 0 4px var(--primary-color);
 }
 
-section {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-}
-
-button {
-  font-family: 'Caprasimo', sans-serif;
-  font-size: 2rem;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
-  cursor: pointer;
-  box-shadow: 0 0 8px var(--primary-color), 0 0 16px var(--primary-color);
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
+p {
+  font-size: 1rem;
   text-shadow: 0 0 1px var(--secondary-color), 0 0 2px var(--secondary-color), 0 0 2px var(--secondary-color);
 }
 
-button:hover {
-  background-color: var(--third-color);
-  box-shadow: 0 0 4px var(--third-color), 0 0 8px var(--third-color);
+button {
+  font-size: 2rem;
+  color: var(--secondary-color);
+  text-shadow: 0 0 1px var(--secondary-color), 0 0 2px var(--secondary-color), 0 0 2px var(--secondary-color);
 }
