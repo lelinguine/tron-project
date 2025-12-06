@@ -1,58 +1,23 @@
-
-
-
-#status:empty {
-  display: none;
-}
-
 #status {
   position: absolute;
   bottom: 50px;
   right: 50px;
   z-index: 1000;
-  padding: 10px 20px;
-  background-color: var(--primary-color);
-  animation: toastAnimate 0.1s ease-in;
-  box-shadow: 0 0 8px var(--primary-color), 0 0 16px var(--primary-color);
-  border-radius: 4px;
 }
 
-#status.failed {
+#status p {
+  color: var(--primary-color);
+  text-shadow: 0 0 1px var(--primary-color), 0 0 2px var(--primary-color), 0 0 2px var(--primary-color);
+}
+
+#status.failed p {
   color: var(--error-color);
   text-shadow: 0 0 1px var(--error-color), 0 0 2px var(--error-color), 0 0 2px var(--error-color);
 }
 
-#status.success {
-  color: var(--success-color);
-  text-shadow: 0 0 1px var(--success-color), 0 0 2px var(--success-color), 0 0 2px var(--success-color);
-}
-
-@keyframes toastAnimate {
-  from {
-    bottom: -100px;
-    opacity: 0;
-  }
-  to {
-    bottom: 50px;
-    opacity: 1;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
 #login-section, #lobby-section {
     display: none;
 }
-
 
 section {
   height: 100%;
@@ -67,10 +32,10 @@ section {
 button {
   padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: var(--primary-color);
   cursor: pointer;
-  box-shadow: 0 0 8px var(--primary-color), 0 0 16px var(--primary-color);
+  box-shadow: 0 0 4px var(--primary-color), 0 0 8px var(--primary-color);
   position: absolute;
   bottom: 50px;
   left: 50%;

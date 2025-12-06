@@ -1,32 +1,53 @@
-import { compare } from 'bcrypt';
+import brcypt from 'bcrypt';
 import connectDb from '../lib/db.js';
 import { createUser, getUserByName } from '../lib/user.js';
 
-export async function handleLogin(username, password) {
+/**
+ * Gère la connexion ou l'inscription d'un utilisateur.
+ *
+ * @export
+ * @param {object} data - Les données de connexion.
+ * @returns {Promise<object>} - Le statut HTTP et les données de réponse.
+ */
+export async function handleLogin(data) {
+    const { username, password } = data;
+
     if (!username || !password) {
-        return { status: 400, data: { error: "Aucun nom d'utilisateur ou mot de passe renseigné." } };
+        return {
+            ok: false,
+            error: "Aucun nom d'utilisateur ou mot de passe renseigné."
+        };
     }
 
     try {
+        // Connexion à la base de données
         await connectDb();
+        // Récupération de l'utilisateur
         let user = await getUserByName(username);
+        let message = 'Utilisateur connecté.';
 
         if (!user) {
+            // Création de l'utilisateur s'il n'existe pas
             user = await createUser(username, password);
             if (!user) {
-                return { status: 500, data: { error: "Erreur lors de la création de l'utilisateur" } };
+                return { ok: false, error: "Erreur lors de la création de l'utilisateur." };
             }
-        } else {
-            const match = await compare(password, user.password);
-            if (!match) {
-                return { status: 401, data: { error: 'Mot de passe incorrect.' } };
-            }
+            message = 'Utilisateur créé et connecté.';
+        } else if (!(await brcypt.compare(password, user.password))) {
+            return { ok: false, error: 'Mot de passe incorrect.' };
         }
 
-        const safeUser = { username: user.username, createdAt: user.createdAt };
-        return { status: 200, data: { ok: true, user: safeUser } };
+        return {
+            ok: true,
+            success: message,
+            user: {
+                username: user.username,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
+            }
+        };
     } catch (error) {
-        console.error('Error in login handler:', error);
-        return { status: 500, data: { error: 'Erreur serveur.' } };
+        console.error('Error in login:', error);
+        return { ok: false, error: 'Erreur serveur.' };
     }
 }

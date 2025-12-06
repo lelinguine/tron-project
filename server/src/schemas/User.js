@@ -1,11 +1,11 @@
-import mongoose, { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
 /**
  * Le schémas de l'utilisateur.
  *
- * @type {Schema}
+ * @type {mongoose.Schema}
  */
-const UserSchema = new Schema(
+const UserSchema = new mongoose.Schema(
     {
         username: { type: String, required: true, unique: true, trim: true },
         password: { type: String, required: true }
@@ -17,8 +17,8 @@ const UserSchema = new Schema(
  * Le modèle de l'utilisateur.
  *
  * @export
- * @type {import('mongoose').Model<{ username: string, password: string, createdAt: Date, updatedAt: Date }>}
+ * @type {import('mongoose').Model<{ username: string; password: string; createdAt: Date; updatedAt: Date }>}
  */
-const User = mongoose.models.User ?? model('User', UserSchema);
+const UserModel = mongoose.models.User ?? mongoose.model('User', UserSchema);
 
-export default User;
+export default UserModel;

@@ -7,7 +7,6 @@
   --primary-color: #FCFEEF;
   --secondary-color: #469CA1;
   --third-color: #DBD8BE;
-  --success-color: #4CAF50;
   --error-color: #F44336;
 }
 
@@ -38,12 +37,12 @@ h2 {
 }
 
 p {
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-shadow: 0 0 1px var(--secondary-color), 0 0 2px var(--secondary-color), 0 0 2px var(--secondary-color);
 }
 
 button {
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: var(--secondary-color);
   text-shadow: 0 0 1px var(--secondary-color), 0 0 2px var(--secondary-color), 0 0 2px var(--secondary-color);
 }

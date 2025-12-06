@@ -1,5 +1,4 @@
 # tron-projet
-blabla
 
 ## Développeurs - Group 2
 - Marc Arold Rosemond : marc.arold-rosemond@etu.univ-grenoble-alpes.fr</br>
@@ -25,5 +24,3 @@ node src/scripts/seed.js
 ```bash
 node server.js
 ```
-
-# 🔧 CHANGELOG
