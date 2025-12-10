@@ -146,12 +146,12 @@ class Game {
                 COLORS[Math.floor(Math.random() * COLORS.length)],
                 this.nbPlayers % 2 === 0
                     ? {
-                          x: 50,
-                          y: 50 + (this.nbPlayers / 2) * (GAME_SIZE - 100)
+                          x: Math.floor(GAME_SIZE / 5),
+                          y: Math.floor(GAME_SIZE / 2)
                       }
                     : {
-                          x: GAME_SIZE - 50,
-                          y: 50 + ((this.nbPlayers - 1) / 2) * (GAME_SIZE - 100)
+                          x: GAME_SIZE - Math.floor(GAME_SIZE / 5),
+                          y: Math.floor(GAME_SIZE / 2)
                       },
                 this.nbPlayers % 2 === 0 ? Direction.Right : Direction.Left
             )
@@ -189,7 +189,13 @@ class Game {
      *
      * @memberof Game
      */
-    start() {
+    async start() {
+        const count = [3, 2, 1, "Go!"];
+        for (const c of count) {
+            this.broadcastToPlayers(c);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
         // Mise à jour du statut
         this._state = GameState.Playing;
 
@@ -368,9 +374,9 @@ class Game {
      *
      * @memberof Game
      */
-    broadcastToPlayers() {
+    broadcastToPlayers(message) {
         const playersArray = this.playersArray;
-        const clientStr = this.toClient();
+        const clientStr = this.toClient(message);
 
         for (let i = 0; i < playersArray.length; i++) {
             playersArray[i].connection.sendUTF(clientStr);
@@ -383,10 +389,11 @@ class Game {
      * @return {string} La partie lisible pour le client.
      * @memberof Game
      */
-    toClient() {
+    toClient(message) {
         return JSON.stringify({
             players: this.playersArray.map((player) => player.toClient()),
-            state: this._state
+            state: this._state,
+            message: message || 'none'
         });
     }
 }

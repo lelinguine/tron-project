@@ -35,7 +35,7 @@ export const TICK_RATE = 10;
  * @export
  * @type {number}
  */
-export const MAX_PLAYERS = 4;
+export const MAX_PLAYERS = 2;
 
 /**
  * Les couleurs disponibles pour les joueurs.

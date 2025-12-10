@@ -1,0 +1,38 @@
+#status {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+}
+
+#status.failed p {
+  color: var(--error-color);
+  text-shadow: 
+    0 0 calc(var(--text-shadow) / 4) var(--error-color), 
+    0 0 calc(var(--text-shadow) / 2) var(--error-color), 
+    0 0 calc(var(--text-shadow) / 2) var(--error-color);
+}
+
+#login-section, #lobby-section, #game-section {
+    display: none;
+}
+
+#gameboard {
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+#cancel-button {
+  display: none;
+}

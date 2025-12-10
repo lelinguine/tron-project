@@ -24,7 +24,6 @@ export async function handleLogin(data) {
         await connectDb();
         // Récupération de l'utilisateur
         let user = await getUserByName(username);
-        let message = 'Utilisateur connecté.';
 
         if (!user) {
             // Création de l'utilisateur s'il n'existe pas
@@ -32,14 +31,13 @@ export async function handleLogin(data) {
             if (!user) {
                 return { ok: false, error: "Erreur lors de la création de l'utilisateur." };
             }
-            message = 'Utilisateur créé et connecté.';
         } else if (!(await brcypt.compare(password, user.password))) {
             return { ok: false, error: 'Mot de passe incorrect.' };
         }
 
         return {
             ok: true,
-            success: message,
+            success: 'Utilisateur connecté.',
             user: {
                 username: user.username,
                 createdAt: user.createdAt,

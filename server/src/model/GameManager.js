@@ -86,10 +86,8 @@ class GameManager {
             const game = this._waitingGame;
             // Ajoute la partie pleine à la liste des parties
             this._games.set(this._waitingGame.id, game);
-            // Crée une nouvelle partie en attente
-            this._waitingGame = new Game();
-            // Envoie un message de démarrage à tous les joueurs de la partie pleine
-            game.broadcastToPlayers();
+            // Démarre la partie (change state à 'playing' et lance la boucle)
+            game.start();
         } else {
             // Envoie un message d'attente au joueur
             connection.sendUTF(

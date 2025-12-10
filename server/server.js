@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { server as WebSocketServer } from 'websocket';
 import { PORT } from './src/config.js';
 import { handleLogin } from './src/controllers/authController.js';
-import { handleDisconnect, handleJoinGame } from './src/controllers/gamesController.js';
+import { handleDisconnect, handleJoinGame, handleChangeDirection } from './src/controllers/gamesController.js';
 import RequestType from './src/enums/RequestType.js';
 
 const server = createServer((_, res) => {
