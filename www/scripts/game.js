@@ -64,14 +64,35 @@ function updateGame(players) {
                 svg.appendChild(polyline);
             }
 
-            // Dessiner la tête du joueur
-            const rect = document.createElementNS(svgNS, "rect");
-            rect.setAttribute("x", player.position.x);
-            rect.setAttribute("y", player.position.y);
-            rect.setAttribute("width", "1");
-            rect.setAttribute("height", "1");
-            rect.setAttribute("fill", color);
-            svg.appendChild(rect);
+            // Dessiner la tête du joueur avec la première frame du mouton
+            const clipId = `sheep-clip-${player.username}`;
+            const defs = document.createElementNS(svgNS, "defs");
+            const clipPath = document.createElementNS(svgNS, "clipPath");
+            clipPath.setAttribute("id", clipId);
+            const clipRect = document.createElementNS(svgNS, "rect");
+            clipRect.setAttribute("x", player.position.x - 1.5);
+            clipRect.setAttribute("y", player.position.y - 1.5);
+            clipRect.setAttribute("width", "4");
+            clipRect.setAttribute("height", "4");
+            clipPath.appendChild(clipRect);
+            defs.appendChild(clipPath);
+            svg.appendChild(defs);
+            
+            // Appliquer un flip horizontal si le joueur va vers la gauche
+            const group = document.createElementNS(svgNS, "g");
+            if (player.direction === 'left') {
+                group.setAttribute("transform", `scale(-1, 1) translate(${-(player.position.x + 0.5) * 2}, 0)`);
+            }
+            
+            const image = document.createElementNS(svgNS, "image");
+            image.setAttribute("x", player.position.x - 1.5);
+            image.setAttribute("y", player.position.y - 1.5);
+            image.setAttribute("width", "48");
+            image.setAttribute("height", "4");
+            image.setAttribute("href", "assets/Resources/Sheep/Sheep_Grass.png");
+            image.setAttribute("clip-path", `url(#${clipId})`);
+            group.appendChild(image);
+            svg.appendChild(group);
 
             // Afficher le nom du joueur
             const text = document.createElementNS(svgNS, "text");
