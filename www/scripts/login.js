@@ -1,5 +1,7 @@
+let username;
+
 function connect() {
-    let username = document.getElementById('user_username').value;
+    username = document.getElementById('user_username').value;
     const password = document.getElementById('user_password').value;
 
     ws.send(JSON.stringify({
@@ -8,7 +10,6 @@ function connect() {
         password: password
     }));
     document.getElementById('username').textContent = username;
-    localStorage.setItem('username', username);
 }
 
 function logout() {

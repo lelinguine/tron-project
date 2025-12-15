@@ -52,11 +52,6 @@ h3, p, input {
     0 0 calc(var(--text-shadow) / 2) var(--primary-color);
 }
 
-button:hover, input:focus {
-  background-color: var(--third-color);
-  box-shadow: 0 0 4px var(--third-color), 0 0 8px var(--third-color);
-}
-
 button, input {
   font-size: 1.8rem;
   border: none;
@@ -68,19 +63,4 @@ button, input {
     0 0 calc(var(--text-shadow) / 4) var(--secondary-color), 
     0 0 calc(var(--text-shadow) / 2) var(--secondary-color), 
     0 0 calc(var(--text-shadow) / 2) var(--secondary-color);
-}
-
-button {
-  position: absolute;
-  padding: 10px 20px;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  cursor: pointer;
-}
-
-input {
-  outline: none;
-  width: 240px;
-  padding: 5px 10px;
 }

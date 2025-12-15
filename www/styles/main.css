@@ -33,6 +33,38 @@ section {
   gap: 20px;
 }
 
-#cancel-button {
+#cancel-button, #quit-button {
   display: none;
+}
+
+#select-button, #restart-button {
+  bottom: 150px;
+}
+
+#select-button {
+  bottom: 150px;
+}
+
+button {
+  position: absolute;
+  padding: 10px 20px;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+input {
+  outline: none;
+  width: 240px;
+  padding: 5px 10px;
+}
+
+button:hover, input:focus, #select-button.disabled {
+  background-color: var(--third-color);
+  box-shadow: 0 0 4px var(--third-color), 0 0 8px var(--third-color);
+}
+
+#select-button.disabled {
+  cursor: not-allowed;
 }

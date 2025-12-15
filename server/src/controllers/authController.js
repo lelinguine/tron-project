@@ -37,6 +37,7 @@ export async function handleLogin(data) {
 
         return {
             ok: true,
+            type: 'login',
             success: 'Utilisateur connecté.',
             user: {
                 username: user.username,

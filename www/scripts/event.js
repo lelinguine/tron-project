@@ -10,9 +10,9 @@ ws.onmessage = function (e) {
     console.log('Message reçu:', data);
 
     // Événement: Réponse de login
-    if (data.ok !== undefined) {
+    if (data.type === 'login') {
         if (data.ok) {
-            document.getElementById('status').innerHTML = `<p>${data.success}</p>`;
+            document.getElementById('status').innerHTML = `<p>Utilisateur connecté.</p>`;
             document.getElementById('status').classList.remove('failed');
             if (data.success && data.success.includes('connecté')) {
                 goTo('login-section', 'lobby-section');
@@ -49,9 +49,6 @@ ws.onmessage = function (e) {
     else if (data.state === 'finished') {
         document.getElementById('status').innerHTML = `<p>Partie terminée !</p>`;
         document.getElementById('status').classList.add('failed');
-        document.getElementById('ready').textContent = 'Not ready';
-        document.getElementById('play-button').style.display = 'block';
-        document.getElementById('cancel-button').style.display = 'none';
         document.getElementById('quit-button').style.display = 'block';
     }
     
