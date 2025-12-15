@@ -1,5 +1,25 @@
 const ws = new WebSocket('ws://localhost:9898');
 
+// Variables pour le chronomètre
+let startTime = null;
+
+// Fonction pour formater le temps en mm:ss:ms
+function formatTime(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    const ms = Math.floor((milliseconds % 1000) / 10); // Centièmes de seconde
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
+}
+
+// Fonction pour mettre à jour le chronomètre
+function updateChrono() {
+    if (startTime) {
+        const elapsed = Date.now() - startTime;
+        document.getElementById('status').innerHTML = `<p>${formatTime(elapsed)}</p>`;
+    }
+}
+
 ws.onopen = function () {
     document.getElementById('status').innerHTML = '<p>Serveur connecté.</p>';
 };
@@ -35,11 +55,12 @@ ws.onmessage = function (e) {
         document.getElementById('status').classList.remove('failed');
         goTo('lobby-section', 'game-section');
         updateGame(data.players);
+        startTime = Date.now();
     }
 
     // Événement: La partie démarre
     else if (data.state === 'playing') {
-        document.getElementById('status').innerHTML = `<p></p>`;
+        updateChrono();
         document.getElementById('status').classList.remove('failed');
         goTo('lobby-section', 'game-section');
         updateGame(data.players);

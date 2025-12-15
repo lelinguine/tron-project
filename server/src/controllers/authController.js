@@ -32,7 +32,7 @@ export async function handleLogin(data) {
                 return { ok: false, error: "Erreur lors de la création de l'utilisateur." };
             }
         } else if (!(await brcypt.compare(password, user.password))) {
-            return { ok: false, error: 'Mot de passe incorrect.' };
+            return { ok: false, type: 'login', error: 'Mot de passe incorrect.' };
         }
 
         return {

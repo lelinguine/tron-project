@@ -38,11 +38,7 @@ section {
 }
 
 #select-button, #restart-button {
-  bottom: 150px;
-}
-
-#select-button {
-  bottom: 150px;
+  bottom: 125px;
 }
 
 button {
