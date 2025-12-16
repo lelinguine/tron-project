@@ -1,4 +1,11 @@
-async function goTo(currentPage, targetPage) {
-    document.getElementById(currentPage).style.display = "none";
-    document.getElementById(targetPage).style.display = "flex";
+let currentPage = document.getElementById('enter-section');
+
+async function goTo(target) {
+    if (target === 'login-section' && username) {
+        target = 'lobby-section';
+    }
+
+    currentPage.style.display = 'none';
+    currentPage = document.getElementById(target);
+    currentPage.style.display = 'flex';
 }

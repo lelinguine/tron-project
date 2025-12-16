@@ -36,9 +36,8 @@ export async function handleLogin(data) {
         }
 
         return {
-            ok: true,
             type: 'login',
-            success: 'Utilisateur connecté.',
+            ok: true,
             user: {
                 username: user.username,
                 createdAt: user.createdAt,

@@ -1,5 +1,5 @@
 - quitter proprememnt la partie en cours.
-- proposer le choix du mode de jeu (1v1 ou 1v3) avant de rejoindre une partie.
+- proposer le choix du mode de jeu (1v1 ou 1v1v1v1) avant de rejoindre une partie.
 - afficher un message de fin de partie indiquant le gagnant.
 - ajouter la possibilité d'annuler la file d'attente.
 - possibilité de rejoindre une partie spécifique (avec id de partie).

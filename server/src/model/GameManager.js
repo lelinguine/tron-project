@@ -1,5 +1,4 @@
 import { MAX_PLAYERS } from '../config.js';
-import GameEvent from '../enums/GameEvent.js';
 import { saveGame } from '../lib/game.js';
 import Game from './Game.js';
 
@@ -74,31 +73,92 @@ class GameManager {
      * @memberof GameManager
      */
     addPlayerToQueue(connection, username) {
+        const game = this._waitingGame;
         // Ajoute le joueur
-        this._waitingGame.addPlayer(connection, username);
+        game.addPlayer(connection, username);
         // Mappe le joueur à la partie
-        this._playerGameMap.set(username, this._waitingGame.id);
+        this._playerGameMap.set(username, game.id);
         // Mappe la connexion au nom d'utilisateur
         this._connectionUserMap.set(connection, username);
 
         // Si la partie est pleine
-        if (this._waitingGame.nbPlayers === MAX_PLAYERS) {
-            const game = this._waitingGame;
+        if (game.nbPlayers === MAX_PLAYERS) {
             // Ajoute la partie pleine à la liste des parties
-            this._games.set(this._waitingGame.id, game);
+            this._games.set(game.id, game);
             // Démarre la partie (change state à 'playing' et lance la boucle)
             game.start();
         } else {
-            // Envoie un message d'attente au joueur
-            connection.sendUTF(
-                JSON.stringify({
-                    ok: true,
-                    success: "En attente d'autres joueurs...",
-                    type: GameEvent.Waiting,
-                    nbPlayers: this._waitingGame.nbPlayers
-                })
-            );
+            game.broadcastToPlayers(`${game.nbPlayers}/${MAX_PLAYERS}`);
         }
+    }
+
+    /**
+     * Retire un joueur de la file d'attente.
+     *
+     * @param {import('websocket').connection} connection - La connexion WebSocket du joueur.
+     * @memberof GameManager
+     */
+    removePlayerFromQueue(connection) {
+        // Récupération du nom d'utilisateur associé à la connexion
+        const username = this._connectionUserMap.get(connection);
+        if (!username) {
+            return;
+        }
+
+        // Vérification que le joueur est dans la partie en attente
+        const gameId = this._playerGameMap.get(username);
+        if (gameId !== this._waitingGame.id) {
+            return;
+        }
+
+        // Retire le joueur de la partie
+        this._waitingGame.removePlayer(username);
+
+        // Nettoyage des mappings
+        this._connectionUserMap.delete(connection);
+        this._playerGameMap.delete(username);
+
+        // Notifie les autres joueurs du changement du nombre de joueurs
+        if (this._waitingGame.nbPlayers > 0) {
+            this._waitingGame.broadcastToPlayers(`${this._waitingGame.nbPlayers}/${MAX_PLAYERS}`);
+        }
+    }
+
+    /**
+     * Supprime une partie et nettoie tous ses mappings associés.
+     *
+     * @param {string} gameId - L'identifiant de la partie à supprimer.
+     * @memberof GameManager
+     */
+    removeGame(gameId) {
+        // On ne peut pas supprimer la partie en attente
+        if (this._waitingGame.id === gameId) {
+            return;
+        }
+
+        // Récupération de la partie
+        const game = this._games.get(gameId);
+        if (!game) {
+            return;
+        }
+
+        // Suppression des mappings pour tous les joueurs de cette partie
+        for (const [username, id] of this._playerGameMap.entries()) {
+            if (id === gameId) {
+                this._playerGameMap.delete(username);
+            }
+        }
+
+        // Suppression des mappings pour toutes les connexions de cette partie
+        for (const [connection, username] of this._connectionUserMap.entries()) {
+            const playerGameId = this._playerGameMap.get(username);
+            if (playerGameId === gameId) {
+                this._connectionUserMap.delete(connection);
+            }
+        }
+
+        // Suppression de la partie
+        this._games.delete(gameId);
     }
 
     /**
@@ -120,6 +180,12 @@ class GameManager {
             return;
         }
 
+        if (game.id === this._waitingGame.id) {
+            // Le joueur était dans la file d'attente
+            this.removePlayerFromQueue(connection);
+            return;
+        }
+
         // Retire le joueur de la partie
         game.removePlayer(username);
 
@@ -129,7 +195,7 @@ class GameManager {
 
         // Si la partie est vide, on la supprime
         if (game.nbPlayers === 0 && this._waitingGame.id !== game.id) {
-            this._games.delete(game.id);
+            this.removeGame(game.id);
         }
     }
 
@@ -142,6 +208,8 @@ class GameManager {
     async onGameEnd(game) {
         // Sauvegarde de la partie
         await saveGame(game);
+        // Suppression de la partie de la liste des parties actives
+        this.removeGame(game.id);
     }
 }
 

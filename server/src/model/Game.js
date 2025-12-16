@@ -190,10 +190,12 @@ class Game {
      * @memberof Game
      */
     async start() {
-        const count = [3, 2, 1, "Go!"];
+        this._state = GameState.Ready;
+
+        const count = [3, 2, 1, 'Go!'];
         for (const c of count) {
             this.broadcastToPlayers(c);
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
         }
 
         // Mise à jour du statut
@@ -269,8 +271,6 @@ class Game {
 
         // Mise à jour la direction
         player.direction = direction;
-
-        // TODO: envoi de l'état mis à jour pour Les clients ou attente du prochain tick
     }
 
     /**

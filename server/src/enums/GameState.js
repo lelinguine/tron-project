@@ -6,6 +6,7 @@
  */
 const GameState = {
     Waiting: 'waiting',
+    Ready: 'ready',
     Playing: 'playing',
     Finished: 'finished'
 };

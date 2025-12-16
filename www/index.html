@@ -1,92 +1,71 @@
 <!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
-
 <html>
     <head>
-        <meta charset="utf-8">
-        <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-        <meta http-equiv="Content-Security-Policy" content="connect-src * ws: wss:; default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; media-src *; img-src 'self' data: content: https:; font-src 'self' data: https://fonts.gstatic.com; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval';">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-        <meta name="color-scheme" content="light dark">
+        <meta charset="utf-8" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="connect-src * ws: wss:; default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; media-src *; img-src 'self' data: content: https:; font-src 'self' data: https://fonts.gstatic.com; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval';"
+        />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover" />
+        <meta name="color-scheme" content="light dark" />
         <link rel="stylesheet" href="./styles/base.css" />
         <title>Sheep-e-ates</title>
     </head>
     <body class="app">
-
-        
         <div class="grain"></div>
-        <img class="blur" src="./assets/eqMZWi.png"  />
+        <img class="blur" src="./assets/eqMZWi.png" />
 
         <section id="enter-section">
             <h1>Sheep-e-ates</h1>
             <h2>v0.1-a</h2>
-            <button onclick="goTo('enter-section', 'login-section')">Enter</button>
+            <button onclick="goTo('login-section')">Jouer</button>
         </section>
 
         <section id="login-section">
-            <h2>Login or Register</h2>
+            <h2>Connection ou inscription</h2>
             <input id="user_username" type="text" placeholder="Username" />
-            <input id="user_password" type="password" placeholder="Password" onkeypress="if(event.key === 'Enter') connect()" />
-            <button onclick="connect()">Connect</button>
+            <input
+                id="user_password"
+                type="password"
+                placeholder="Password"
+                onkeypress="if(event.key === 'Enter') connect()"
+            />
+            <button onclick="connect()">Se connecter</button>
         </section>
 
         <section id="lobby-section">
             <h2 id="username"></h2>
-            <h3 id="ready">Not ready</h3>
-            <input id="game_id" type="text" placeholder="GameId" />
-            <button id="select-button" onclick="select()">1v1</button>
-            <button id="play-button" onclick="join()">Start</button>
-            <button id="cancel-button" onclick="cancelJoin()">Cancel</button>
+            <h3>Entrez un id de partie ou rejoignez une partie au hasard</h3>
+            <input id="game-id" type="text" placeholder="GameId" />
+            <!-- <button id="select-button" onclick="select()">1v1</button> -->
+            <button id="play-button" onclick="join()">Rejoindre</button>
+        </section>
+
+        <section id="waiting-section">
+            <h3 id="waiting-state"></h3>
+            <button id="cancel-button" onclick="cancelJoin()">Annuler</button>
         </section>
 
         <section id="game-section">
-            <div id="gameboard"></div>
+            <div id="game-board"></div>
             <!-- <button id="restart-button" onclick="restart()">Restart</button> -->
-            <button id="quit-button" onclick="quit()">Quit</button>
         </section>
 
+        <section id="result-section">
+            <h2>Partie terminée !</h2>
+            <h3>Classement :</h3>
+            <ul id="result-list"></ul>
 
-
-
-
-
-
-
-
-
-
+            <button id="quit-button" onclick="quit()">Quitter</button>
+        </section>
 
         <div id="status"><p>Connexion en cours...</p></div>
 
         <script src="cordova.js"></script>
 
+        <script src="scripts/view.js"></script>
         <script src="scripts/router.js"></script>
         <script src="scripts/event.js"></script>
         <script src="scripts/login.js"></script>

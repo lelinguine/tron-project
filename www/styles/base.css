@@ -8,7 +8,7 @@
   --secondary-color: #469CA1;
   --third-color: #DBD8BE;
   --error-color: #F44336;
-  --text-shadow: 8px;
+  --text-shadow: 0px;
 }
 
 body {
@@ -29,27 +29,15 @@ h1, h2, h3, p, button, text, input {
 
 h1 {
   font-size: 8rem;
-  text-shadow: 
-    0 0 calc(var(--text-shadow) / 2) var(--primary-color), 
-    0 0 var(--text-shadow) var(--primary-color), 
-    0 0 var(--text-shadow) var(--primary-color);
 }
 
 h2 {
   font-size: 2.4rem;
-  text-shadow: 
-    0 0 calc(var(--text-shadow) / 4) var(--primary-color), 
-    0 0 calc(var(--text-shadow) / 2) var(--primary-color), 
-    0 0 calc(var(--text-shadow) / 2) var(--primary-color);
     padding-bottom: 1rem;
 }
 
-h3, p, input {
+h3, p, input, ul {
   font-size: 1.6rem;
-  text-shadow: 
-    0 0 calc(var(--text-shadow) / 4) var(--primary-color), 
-    0 0 calc(var(--text-shadow) / 2) var(--primary-color), 
-    0 0 calc(var(--text-shadow) / 2) var(--primary-color);
 }
 
 button, input {
@@ -59,8 +47,8 @@ button, input {
   border-radius: 8px;
   background-color: var(--primary-color);
   box-shadow: 0 0 4px var(--primary-color), 0 0 8px var(--primary-color);
-    text-shadow: 
-    0 0 calc(var(--text-shadow) / 4) var(--secondary-color), 
-    0 0 calc(var(--text-shadow) / 2) var(--secondary-color), 
-    0 0 calc(var(--text-shadow) / 2) var(--secondary-color);
+}
+
+ul {
+  list-style: number;
 }

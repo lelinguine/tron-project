@@ -3,7 +3,12 @@ import { createServer } from 'http';
 import { server as WebSocketServer } from 'websocket';
 import { PORT } from './src/config.js';
 import { handleLogin } from './src/controllers/authController.js';
-import { handleDisconnect, handleJoinGame, handleChangeDirection } from './src/controllers/gamesController.js';
+import {
+    handleChangeDirection,
+    handleDisconnect,
+    handleJoinGame,
+    handleLeaveQueue
+} from './src/controllers/gamesController.js';
 import RequestType from './src/enums/RequestType.js';
 
 const server = createServer((_, res) => {
@@ -34,15 +39,17 @@ wsServer.on('request', (request) => {
                     result = await handleLogin(data);
                     break;
 
-                case RequestType.JoinGame: {
+                case RequestType.JoinGame:
                     result = handleJoinGame(data, connection);
                     break;
-                }
 
-                case RequestType.ChangeDirection: {
+                case RequestType.LeaveQueue:
+                    result = handleLeaveQueue(connection);
+                    break;
+
+                case RequestType.ChangeDirection:
                     result = handleChangeDirection(data, connection);
                     break;
-                }
 
                 default:
                     result = { error: "Type d'action invalide" };

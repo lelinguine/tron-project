@@ -28,6 +28,11 @@ export function handleJoinGame(data, connection) {
     gameManager.addPlayerToQueue(connection, username);
 }
 
+export function handleLeaveQueue(connection) {
+    // Retrait du joueur de la file d'attente
+    gameManager.removePlayerFromQueue(connection);
+}
+
 /**
  * Gère le changement de direction d'un joueur.
  *
