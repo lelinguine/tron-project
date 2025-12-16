@@ -3,7 +3,7 @@
 ## Principales
 
 - ✅ Quitter proprememnt la partie en cours.
-- Proposer le choix du mode de jeu (1v1 ou 1v3) avant de rejoindre une partie.
+- ✅ Proposer le choix du mode de jeu (1v1 ou 1v3) avant de rejoindre une partie.
 - ✅ Afficher un message de fin de partie indiquant le gagnant.
 - ✅ Ajouter la possibilité d'annuler la file d'attente.
 - Possibilité de rejoindre une partie spécifique (avec id de partie).

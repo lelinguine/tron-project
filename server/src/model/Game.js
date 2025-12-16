@@ -1,4 +1,4 @@
-import { COLORS, GAME_SIZE, MAX_PLAYERS, TICK_RATE } from '../config.js';
+import { COLORS, GAME_SIZE, TICK_RATE } from '../config.js';
 import Direction from '../enums/Direction.js';
 import GameState from '../enums/GameState.js';
 import Player from './Player.js';
@@ -31,6 +31,12 @@ class Game {
      */
     _state;
     /**
+     * Le nombre maximum de joueurs.
+     *
+     * @memberof Game
+     */
+    _maxPlayers;
+    /**
      * La boucle de jeu.
      *
      * @type {(NodeJS.Timeout | null)}
@@ -48,13 +54,15 @@ class Game {
     /**
      * Crée une nouvelle instance de {@link Game}.
      *
+     * @param {number} maxPlayers - Le nombre maximum de joueurs.
      * @param {(game: Game) => Promise} onEnd - La fonction appelée à la fin de la partie.
      * @memberof Game
      */
-    constructor(onEnd) {
+    constructor(maxPlayers, onEnd) {
         this._id = Math.random().toString(36).substring(2, 9);
         this._players = new Map();
         this._state = GameState.Waiting;
+        this._maxPlayers = maxPlayers;
         this._loopInterval = null;
         this._onEnd = onEnd;
     }
@@ -133,7 +141,7 @@ class Game {
      */
     addPlayer(connection, username) {
         // Vérifie si la partie est pleine
-        if (this.nbPlayers >= MAX_PLAYERS) {
+        if (this.nbPlayers >= this._maxPlayers) {
             return;
         }
 

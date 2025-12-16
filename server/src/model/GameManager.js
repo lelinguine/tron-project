@@ -1,4 +1,3 @@
-import { MAX_PLAYERS } from '../config.js';
 import { saveGame } from '../lib/game.js';
 import Game from './Game.js';
 
@@ -16,12 +15,19 @@ class GameManager {
      */
     _games;
     /**
-     * La partie en attente de joueurs.
+     * La partie en attente de joueurs pour 2 joueurs.
      *
      * @type {Game}
      * @memberof GameManager
      */
-    _waitingGame;
+    _waitingGame2Players;
+    /**
+     * La partie en attente de joueurs pour 4 joueurs.
+     *
+     * @type {Game}
+     * @memberof GameManager
+     */
+    _waitingGame4Players;
     /**
      * La map des joueurs vers leurs parties (clé: username, valeur: id de la partie).
      *
@@ -49,7 +55,8 @@ class GameManager {
 
         this.onGameEnd = this.onGameEnd.bind(this);
 
-        this._waitingGame = new Game(this.onGameEnd);
+        this._waitingGame2Players = new Game(2, this.onGameEnd);
+        this._waitingGame4Players = new Game(4, this.onGameEnd);
     }
 
     /**
@@ -65,18 +72,22 @@ class GameManager {
         if (!gameId) return undefined;
 
         // Envoi de la partie
-        return this._waitingGame.id === gameId ? this._waitingGame : this._games.get(gameId);
+        if (this._waitingGame2Players.id === gameId) return this._waitingGame2Players;
+        if (this._waitingGame4Players.id === gameId) return this._waitingGame4Players;
+        return this._games.get(gameId);
     }
 
     /**
      * Ajoute un joueur à la file d'attente et démarre la partie si nécessaire.
      *
-     * @param {import('websocket').connection} connection
-     * @param {string} username
+     * @param {import('websocket').connection} connection - La connexion WebSocket du joueur.
+     * @param {string} username - Le nom d'utilisateur du joueur.
+     * @param {number} maxPlayers - Le nombre maximum de joueurs (2 ou 4).
      * @memberof GameManager
      */
-    addPlayerToQueue(connection, username) {
-        const game = this._waitingGame;
+    addPlayerToQueue(connection, username, maxPlayers) {
+        const game = maxPlayers === 4 ? this._waitingGame4Players : this._waitingGame2Players;
+
         // Ajoute le joueur
         game.addPlayer(connection, username);
         // Mappe le joueur à la partie
@@ -85,15 +96,19 @@ class GameManager {
         this._connectionUserMap.set(connection, username);
 
         // Si la partie est pleine
-        if (game.nbPlayers === MAX_PLAYERS) {
+        if (game.nbPlayers === maxPlayers) {
             // Ajoute la partie pleine à la liste des parties
             this._games.set(game.id, game);
             // Création d'une nouvelle partie en attente
-            this._waitingGame = new Game(this.onGameEnd);
+            if (maxPlayers === 4) {
+                this._waitingGame4Players = new Game(4, this.onGameEnd);
+            } else {
+                this._waitingGame2Players = new Game(2, this.onGameEnd);
+            }
             // Démarre la partie (change state à 'playing' et lance la boucle)
             game.start();
         } else {
-            game.broadcastToPlayers(`${game.nbPlayers}/${MAX_PLAYERS}`);
+            game.broadcastToPlayers(`${game.nbPlayers}/${maxPlayers}`);
         }
     }
 
@@ -110,22 +125,27 @@ class GameManager {
             return;
         }
 
-        // Vérification que le joueur est dans la partie en attente
+        // Vérification que le joueur est dans une file d'attente
         const gameId = this._playerGameMap.get(username);
-        if (gameId !== this._waitingGame.id) {
+        let waitingGame;
+        if (gameId === this._waitingGame2Players.id) {
+            waitingGame = this._waitingGame2Players;
+        } else if (gameId === this._waitingGame4Players.id) {
+            waitingGame = this._waitingGame4Players;
+        } else {
             return;
         }
 
         // Retire le joueur de la partie
-        this._waitingGame.removePlayer(username);
+        waitingGame.removePlayer(username);
 
         // Nettoyage des mappings
         this._connectionUserMap.delete(connection);
         this._playerGameMap.delete(username);
 
         // Notifie les autres joueurs du changement du nombre de joueurs
-        if (this._waitingGame.nbPlayers > 0) {
-            this._waitingGame.broadcastToPlayers(`${this._waitingGame.nbPlayers}/${MAX_PLAYERS}`);
+        if (waitingGame.nbPlayers > 0) {
+            waitingGame.broadcastToPlayers(`${waitingGame.nbPlayers}/${waitingGame._maxPlayers}`);
         }
     }
 
@@ -148,8 +168,8 @@ class GameManager {
             return;
         }
 
-        if (game.id === this._waitingGame.id) {
-            // Le joueur était dans la file d'attente
+        if (game.id === this._waitingGame2Players.id || game.id === this._waitingGame4Players.id) {
+            // Le joueur était dans une file d'attente
             this.removePlayerFromQueue(connection);
             return;
         }
@@ -162,7 +182,11 @@ class GameManager {
         this._playerGameMap.delete(username);
 
         // Si la partie est vide, on la supprime
-        if (game.nbPlayers === 0 && this._waitingGame.id !== game.id) {
+        if (
+            game.nbPlayers === 0 &&
+            game.id !== this._waitingGame2Players.id &&
+            game.id !== this._waitingGame4Players.id
+        ) {
             // Suppression de la partie
             this._games.delete(game.id);
         }

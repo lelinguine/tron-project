@@ -9,7 +9,7 @@ const view = {
     /**
      * @type {HTMLButtonElement}
      */
-    playBtn: document.getElementById('play'),
+    startBtn: document.getElementById('start'),
 
     // Login
     loginForm: document.getElementById('login'),
@@ -29,12 +29,20 @@ const view = {
      * @type {HTMLButtonElement}
      */
     selectModeBtn: document.getElementById('select-button'),
+    /**
+     * @type {HTMLButtonElement}
+     */
+    playBtn: document.getElementById('play-button'),
 
     // Waiting
     /**
      * @type {HTMLElement}
      */
     waitingState: document.getElementById('waiting-state'),
+    /**
+     * @type {HTMLButtonElement}
+     */
+    cancelBtn: document.getElementById('cancel-button'),
 
     //  Game
     /**

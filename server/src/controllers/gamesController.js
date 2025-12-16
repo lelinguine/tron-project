@@ -13,7 +13,7 @@ const gameManager = new GameManager();
  *
  */
 export function handleJoinGame(data, connection) {
-    const { username } = data;
+    const { username, mode = 2 } = data;
 
     console.log(`User ${username} is trying to join a game.`);
 
@@ -25,7 +25,7 @@ export function handleJoinGame(data, connection) {
     }
 
     // Ajout du joueur dans la file d'attente
-    gameManager.addPlayerToQueue(connection, username);
+    gameManager.addPlayerToQueue(connection, username, mode);
 }
 
 export function handleLeaveQueue(connection) {

@@ -20,7 +20,7 @@
         <section id="enter-section">
             <h1>Sheep-e-ates</h1>
             <h2>v0.1-a</h2>
-            <button id="play">Jouer</button>
+            <button id="start">Jouer</button>
         </section>
 
         <section id="login-section">
@@ -35,14 +35,14 @@
         <section id="lobby-section">
             <h2 id="welcome-message">Bienvenue</h2>
             <h3>Entrez un id de partie ou rejoignez une partie au hasard</h3>
-            <input id="game-id" type="text" placeholder="Identifiant de partie" />
-            <!-- <button id="select-button" onclick="select()">1v1</button> -->
-            <button id="play-button" onclick="join()">Rejoindre</button>
+            <input id="game-id" type="text" placeholder="Id de partie" />
+            <button id="select-button">Mode : 1v1</button>
+            <button id="play-button">Rejoindre</button>
         </section>
 
         <section id="waiting-section">
             <h3 id="waiting-state"></h3>
-            <button id="cancel-button" onclick="cancelJoin()">Annuler</button>
+            <button id="cancel-button">Annuler</button>
         </section>
 
         <section id="game-section">
@@ -55,7 +55,7 @@
             <h3>Classement :</h3>
             <ul id="result-list"></ul>
 
-            <button id="quit-button" onclick="quit()">Retour au lobby</button>
+            <button id="quit-button">Retour au lobby</button>
         </section>
 
         <div id="status"><p>Connexion en cours...</p></div>

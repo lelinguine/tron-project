@@ -6,6 +6,6 @@ async function goTo(target) {
     currentPage.style.display = 'flex';
 }
 
-view.playBtn.addEventListener('click', () => {
+view.startBtn.addEventListener('click', () => {
     goTo(username ? 'lobby-section' : 'login-section');
 });
