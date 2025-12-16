@@ -1,6 +1,10 @@
 const view = {
     // Global
     /**
+     * @type {HTMLButtonElement}
+     */
+    logoutBtn: document.getElementById('logout-button'),
+    /**
      * @type {HTMLElement}
      */
     status: document.getElementById('status'),

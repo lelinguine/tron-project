@@ -4,5 +4,3 @@ const RequestType = {
     LeaveQueue: 'leaveQueue',
     ChangeDirection: 'changeDirection'
 };
-
-export default RequestType;

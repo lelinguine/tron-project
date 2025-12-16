@@ -1,7 +1,6 @@
 /**
  * Les directions possibles pour un joueur.
  *
- * @export
  * @enum {string}
  */
 const Direction = {
@@ -10,5 +9,3 @@ const Direction = {
     Left: 'left',
     Right: 'right'
 };
-
-export default Direction;

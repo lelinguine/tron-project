@@ -1,9 +1,7 @@
-import GameState from './enums/GameState';
-
-const ws = new WebSocket('ws://localhost:9898');
+let ws = new WebSocket('ws://localhost:9898');
 
 ws.onopen = function () {
-    view.updateStatus('<p>Serveur connecté.</p>');
+    view.updateStatus('<p>Serveur connecté</p>');
 };
 
 // Gestionnaire global des messages WebSocket
@@ -14,9 +12,11 @@ ws.onmessage = function (e) {
     // Événement: Réponse de login
     if (data.type === 'login') {
         if (data.ok) {
-            view.updateStatus('<p>Utilisateur connecté.</p>');
-            localStorage.setItem('username', data.user.username);
-            goTo('lobby-section');
+            // Stockage du nom d'utilisateur
+            username = data.user.username;
+            localStorage.setItem('username', username);
+            // Mise à jour de l'interface
+            onConnected();
         } else {
             view.updateStatus(`<p>${data.error}</p>`, true);
         }
@@ -65,5 +65,5 @@ ws.onmessage = function (e) {
 
 ws.onerror = function (error) {
     console.error('WebSocket Error:', error);
-    view.updateStatus('<p>Erreur de connexion.</p>', true);
+    view.updateStatus('<p>Erreur de connexion</p>', true);
 };

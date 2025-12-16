@@ -1,5 +1,3 @@
-import RequestType from './enums/RequestType.js';
-
 function join() {
     ws.send(JSON.stringify({ type: RequestType.JoinGame, username, mode: selectedMode }));
 }
@@ -26,7 +24,7 @@ function switchMode() {
 view.selectModeBtn.addEventListener('click', switchMode);
 
 function quit() {
-    view.updateStatus('<p>Utilisateur connecté.</p>');
+    view.updateStatus('<p>Utilisateur connecté</p>');
     goTo('lobby-section');
 }
 

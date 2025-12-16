@@ -76,3 +76,14 @@ input:focus,
 #select-button.disabled {
     cursor: not-allowed;
 }
+
+#logout-button {
+    display: none;
+    
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    bottom: unset;
+    left: unset;
+    transform: unset;
+}

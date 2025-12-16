@@ -1,7 +1,6 @@
 /**
  * Les états possibles d'une partie.
  *
- * @export
  * @enum {string}
  */
 const GameState = {
@@ -10,5 +9,3 @@ const GameState = {
     Playing: 'playing',
     Finished: 'finished'
 };
-
-export default GameState;

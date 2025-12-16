@@ -1,6 +1,3 @@
-import Direction from './enums/Direction.js';
-import RequestType from './enums/RequestType.js';
-
 function updateGame(players) {
     view.gameBoard.innerHTML = '';
 
