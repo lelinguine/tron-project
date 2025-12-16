@@ -44,6 +44,12 @@ class Game {
      */
     _loopInterval;
     /**
+     * Les couleurs disponibles pour les joueurs.
+     *
+     * @memberof Game
+     */
+    _availableColors;
+    /**
      * La fonction appelée à la fin de la partie.
      *
      * @type {(game: Game) => Promise}
@@ -64,6 +70,7 @@ class Game {
         this._state = GameState.Waiting;
         this._maxPlayers = maxPlayers;
         this._loopInterval = null;
+        this._availableColors = [...COLORS];
         this._onEnd = onEnd;
     }
 
@@ -146,12 +153,16 @@ class Game {
         }
 
         // Crée et ajoute le joueur
+        const color = this._availableColors.splice(
+            Math.floor(Math.random() * this._availableColors.length),
+            1
+        )[0];
         this._players.set(
             username,
             new Player(
                 connection,
                 username,
-                COLORS[Math.floor(Math.random() * COLORS.length)],
+                color,
                 this.nbPlayers % 2 === 0
                     ? {
                           x: Math.floor(GAME_SIZE / 5),
