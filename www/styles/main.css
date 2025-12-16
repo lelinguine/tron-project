@@ -18,7 +18,7 @@
     display: none;
 }
 
-#gameboard {
+#game-board {
     height: 60%;
     display: flex;
     justify-content: center;
@@ -33,6 +33,13 @@ section {
     justify-content: center;
     align-items: center;
     gap: 20px;
+}
+
+#login {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
 }
 
 #quit-button {

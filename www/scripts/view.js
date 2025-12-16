@@ -5,7 +5,22 @@ const view = {
      */
     status: document.getElementById('status'),
 
+    // Home
+    /**
+     * @type {HTMLButtonElement}
+     */
+    playBtn: document.getElementById('play'),
+
+    // Login
+    loginForm: document.getElementById('login'),
+    usernameInput: document.getElementById('user_username'),
+    passwordInput: document.getElementById('user_password'),
+
     // Lobby
+    /**
+     * @type {HTMLElement}
+     */
+    welcomeMessage: document.getElementById('welcome-message'),
     /**
      * @type {HTMLInputElement}
      */
@@ -26,6 +41,10 @@ const view = {
      * @type {HTMLElement}
      */
     gameBoard: document.getElementById('game-board'),
+    /**
+     * @type {HTMLButtonElement}
+     */
+    quitBtn: document.getElementById('quit-button'),
 
     // Result
     /**

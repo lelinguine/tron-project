@@ -54,6 +54,7 @@ ws.onmessage = function (e) {
 
         view.updateStatus('<p>Partie terminée !</p>');
         view.displayResultList(data.players);
+        view.quitBtn.style.display = 'block';
         goTo('result-section');
     } else {
         console.warn('Type de message inconnu:', data);

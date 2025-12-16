@@ -1,13 +1,15 @@
 let username = localStorage.getItem('username');
 
 if (username) {
-    document.getElementById('username').textContent = `Bienvenue ${username}`;
+    view.welcomeMessage.textContent = `Bienvenue ${username}`;
 }
 
 function connect() {
-    username = document.getElementById('user_username').value;
-    const password = document.getElementById('user_password').value;
+    // Récupération des valeurs des champs de saisie
+    username = view.usernameInput.value;
+    const password = view.passwordInput.value;
 
+    // Envoi des informations de connexion au serveur
     ws.send(
         JSON.stringify({
             type: 'login',
@@ -15,11 +17,23 @@ function connect() {
             password
         })
     );
-    document.getElementById('username').textContent = `Bienvenue ${username}`;
+
+    // Affichage du message de bienvenue
+    view.welcomeMessage.textContent = `Bienvenue ${username}`;
 }
 
 function logout() {
+    // Fermeture de la connexion
     ws.close();
-    document.getElementById('WebSocketStatus').innerHTML = '<p>WebSocket déonnecté.</p>';
-    document.getElementById('WebSocketStatus').classList.remove('failed');
+    view.updateStatus('<p>WebSocket déonnecté.</p>');
+    // Suppression du nom d'utilisateur stocké
+    username = null;
+    localStorage.removeItem('username');
+    // Retour à l'écran d'accueil
+    goTo('enter-section');
 }
+
+view.loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    connect();
+});

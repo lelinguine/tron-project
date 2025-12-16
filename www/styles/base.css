@@ -21,7 +21,7 @@ body {
   overflow: hidden;
 }
 
-h1, h2, h3, p, button, text, input {
+h1, h2, h3, p, button, text, input, ul {
   font-family: 'Caprasimo', sans-serif;
   color: var(--primary-color);
   margin: 0;
