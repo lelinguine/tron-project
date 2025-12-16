@@ -1,5 +1,7 @@
+import RequestType from './enums/RequestType.js';
+
 function join() {
-    ws.send(JSON.stringify({ type: 'joinGame', username, mode: selectedMode }));
+    ws.send(JSON.stringify({ type: RequestType.JoinGame, username, mode: selectedMode }));
 }
 
 view.playBtn.addEventListener('click', join);
@@ -31,7 +33,7 @@ function quit() {
 view.quitBtn.addEventListener('click', quit);
 
 function cancelJoin() {
-    ws.send(JSON.stringify({ type: 'leaveQueue' }));
+    ws.send(JSON.stringify({ type: RequestType.LeaveQueue }));
     quit();
 }
 

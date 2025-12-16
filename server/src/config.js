@@ -29,13 +29,6 @@ export const GAME_SIZE = 50;
  * @type {number}
  */
 export const TICK_RATE = 10;
-/**
- * Le nombre maximum de joueurs par partie.
- *
- * @export
- * @type {number}
- */
-export const MAX_PLAYERS = 2;
 
 /**
  * Les couleurs disponibles pour les joueurs.

@@ -1,3 +1,5 @@
+import GameState from './enums/GameState';
+
 const ws = new WebSocket('ws://localhost:9898');
 
 ws.onopen = function () {
@@ -21,14 +23,14 @@ ws.onmessage = function (e) {
     }
 
     //  Événement: attente je joueur
-    else if (data.state === 'waiting') {
+    else if (data.state === GameState.Waiting) {
         view.updateStatus(`<p>${data.success}</p>`);
         view.waitingState.textContent = `En attente de joueurs (${data.message})`;
         goTo('waiting-section');
     }
 
     //  Événement: partie prête
-    else if (data.state === 'ready') {
+    else if (data.state === GameState.Ready) {
         if (!listenetSet) {
             document.addEventListener('keydown', handleKeydown);
             listenetSet = true;
@@ -42,13 +44,13 @@ ws.onmessage = function (e) {
     }
 
     // Événement: La partie démarre
-    else if (data.state === 'playing') {
+    else if (data.state === GameState.Playing) {
         goTo('game-section');
         updateGame(data.players);
     }
 
     // Événement: La partie est terminée
-    else if (data.state === 'finished') {
+    else if (data.state === GameState.Finished) {
         document.removeEventListener('keydown', handleKeydown);
         listenetSet = false;
 

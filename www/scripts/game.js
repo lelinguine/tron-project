@@ -1,3 +1,6 @@
+import Direction from './enums/Direction.js';
+import RequestType from './enums/RequestType.js';
+
 function updateGame(players) {
     view.gameBoard.innerHTML = '';
 
@@ -75,7 +78,7 @@ function updateGame(players) {
 
     for (let i = 0; i < players.length; i++) {
         const player = players[i];
-        
+
         if (!player.isAlive) continue;
 
         const color = player.color;
@@ -159,19 +162,19 @@ function handleKeydown(event) {
 
     switch (event.key) {
         case 'ArrowUp':
-            direction = 'up';
+            direction = Direction.Up;
             event.preventDefault();
             break;
         case 'ArrowDown':
-            direction = 'down';
+            direction = Direction.Down;
             event.preventDefault();
             break;
         case 'ArrowLeft':
-            direction = 'left';
+            direction = Direction.Left;
             event.preventDefault();
             break;
         case 'ArrowRight':
-            direction = 'right';
+            direction = Direction.Right;
             event.preventDefault();
             break;
     }
@@ -179,7 +182,7 @@ function handleKeydown(event) {
     if (direction) {
         ws.send(
             JSON.stringify({
-                type: 'changeDirection',
+                type: RequestType.ChangeDirection,
                 username: username,
                 newDirection: direction
             })

@@ -1,3 +1,5 @@
+import RequestType from './enums/RequestType.js';
+
 let username = localStorage.getItem('username');
 
 if (username) {
@@ -12,7 +14,7 @@ function connect() {
     // Envoi des informations de connexion au serveur
     ws.send(
         JSON.stringify({
-            type: 'login',
+            type: RequestType.Login,
             username,
             password
         })
