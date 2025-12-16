@@ -16,6 +16,16 @@ export const PORT = process.env.PORT || 9898;
  */
 export const KILL_MULTIPLIER = 5;
 /**
+ * Le bonus de points en fonction du rang final et du nombre de joueurs.
+ *
+ * @export
+ * @type {{ [key: number]: number[] }}
+ */
+export const RANK_BONUS = {
+    [2]: [10, 0],
+    [4]: [20, 10, 5, 0]
+};
+/**
  * La taille du terrain de jeu (en nombre de cases).
  *
  * @export

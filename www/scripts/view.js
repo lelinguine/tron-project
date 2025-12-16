@@ -64,6 +64,10 @@ const view = {
      */
     resultList: document.getElementById('result-list'),
 
+    // Rank
+    rankList: document.getElementById('rank-list'),
+    openRankBtn: document.getElementById('open-rank-button'),
+
     /**
      * Met à jour le statut affiché à l'utilisateur.
      *
@@ -91,7 +95,8 @@ const view = {
         this.resultList.innerHTML = '';
         // Ajouter chaque joueur à la liste
         for (let i = 0; i < orderedPlayers.length; i++) {
-            this.resultList.innerHTML += `<li>${orderedPlayers[i].username}</li>`;
+            const player = orderedPlayers[i];
+            this.resultList.innerHTML += `<li>${player.username} : ${player.score} points</li>`;
         }
     }
 };

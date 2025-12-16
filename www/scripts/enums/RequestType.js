@@ -2,5 +2,6 @@ const RequestType = {
     Login: 'login',
     JoinGame: 'joinGame',
     LeaveQueue: 'leaveQueue',
-    ChangeDirection: 'changeDirection'
+    ChangeDirection: 'changeDirection',
+    GetDashboard: 'getDashboard'
 };

@@ -1,6 +1,22 @@
 import GameModel from '../schemas/Game.js';
 
 /**
+ * Récupère toutes les parties sauvegardées dans la base de données.
+ *
+ * @export
+ * @return {Promise<({ players: ({ username: string; score: number; rank: number; })[] })[]>}
+ */
+export async function getGames() {
+    try {
+        return await GameModel.find().lean();
+    } catch (error) {
+        // Log error
+        console.error('Error at getGames:', error);
+        return [];
+    }
+}
+
+/**
  * Sauvegarde une partie dans la base de données.
  *
  * @export

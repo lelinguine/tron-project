@@ -14,7 +14,9 @@
 #login-section,
 #lobby-section,
 #game-section,
-#waiting-section {
+#waiting-section,
+#result-section,
+#rank-section {
     display: none;
 }
 
@@ -79,11 +81,28 @@ input:focus,
 
 #logout-button {
     display: none;
-    
+
+    position: absolute;
+    top: unset;
+    right: unset;
+    bottom: 50px;
+    left: 50px;
+    transform: unset;
+
+    font-size: 1.2rem;
+}
+
+#open-rank-button {
     position: absolute;
     top: 50px;
     right: 50px;
     bottom: unset;
     left: unset;
     transform: unset;
+
+    font-size: 1.2rem;
+}
+
+#rank-list {
+    list-style: none;
 }

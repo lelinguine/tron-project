@@ -7,10 +7,22 @@ ws.onopen = function () {
 // Gestionnaire global des messages WebSocket
 ws.onmessage = function (e) {
     const data = JSON.parse(e.data);
-    console.log('Message reçu:', data);
 
     // Événement: Réponse de login
     if (data.type === 'login') {
+        if (data.ok) {
+            // Stockage du nom d'utilisateur
+            username = data.user.username;
+            localStorage.setItem('username', username);
+            // Mise à jour de l'interface
+            onConnected();
+        } else {
+            view.updateStatus(`<p>${data.error}</p>`, true);
+        }
+    }
+
+    // Événement: Reçu du classement
+    if (data.type === 'rank') {
         if (data.ok) {
             // Stockage du nom d'utilisateur
             username = data.user.username;

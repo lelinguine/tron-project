@@ -2,7 +2,6 @@ let username = localStorage.getItem('username');
 
 if (username) {
     view.welcomeMessage.textContent = `Bienvenue ${username}`;
-    onConnected();
 }
 
 function connect() {

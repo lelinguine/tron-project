@@ -9,6 +9,7 @@ import {
     handleJoinGame,
     handleLeaveQueue
 } from './src/controllers/gamesController.js';
+import { handleGetDashboard } from './src/controllers/statsController.js';
 import RequestType from './src/enums/RequestType.js';
 
 const server = createServer((_, res) => {
@@ -49,6 +50,10 @@ wsServer.on('request', (request) => {
 
                 case RequestType.ChangeDirection:
                     result = handleChangeDirection(data, connection);
+                    break;
+
+                case RequestType.GetDashboard:
+                    result = handleGetDashboard();
                     break;
 
                 default:

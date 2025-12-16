@@ -1,4 +1,4 @@
-import { KILL_MULTIPLIER } from '../config.js';
+import { KILL_MULTIPLIER, RANK_BONUS } from '../config.js';
 import Direction, { OppositeDirection } from '../enums/Direction.js';
 
 /**
@@ -178,7 +178,11 @@ class Player {
      * @memberof Player
      */
     get score() {
-        return this.trail.length + this._kills * KILL_MULTIPLIER;
+        return (
+            this.trail.length +
+            this._kills * KILL_MULTIPLIER +
+            (this.rank ? RANK_BONUS[this.rank] ?? 0 : 0)
+        );
     }
 
     /**
