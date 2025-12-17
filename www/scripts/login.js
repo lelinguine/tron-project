@@ -20,6 +20,10 @@ view.loginForm.addEventListener('submit', (e) => {
             password: view.passwordInput.value
         })
     );
+
+    // Réinitialisation des champs du formulaire
+    view.usernameInput.value = '';
+    view.passwordInput.value = '';
 });
 
 /**

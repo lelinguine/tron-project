@@ -5,7 +5,7 @@ let ws = new WebSocket('ws://localhost:9898');
  */
 function newWebSocket() {
     ws = new WebSocket('ws://localhost:9898');
-    ws.onopen = onConnected;
+    ws.onopen = onOpen;
     ws.onmessage = onMessage;
     ws.onerror = onError;
 }
@@ -13,7 +13,7 @@ function newWebSocket() {
 /**
  * Gestionnaire de la connexion WebSocket établie.
  */
-function onConnected() {
+function onOpen() {
     view.updateStatus('Serveur connecté');
 }
 
@@ -39,7 +39,7 @@ function onMessage(m) {
     }
 
     // Événement: Reçu du classement
-    if (data.type === 'rank') {
+    else if (data.type === 'rank') {
         view.displayRank(data.ranks);
     }
 
@@ -52,9 +52,8 @@ function onMessage(m) {
 
     //  Événement: partie prête
     else if (data.state === GameState.Ready) {
-        if (!listenerSet) {
+        if (message === 1) {
             document.addEventListener('keydown', handleKeydown);
-            listenerSet = true;
         }
         view.updateStatus('Partie en cours...');
         // Affichage du conmpteur
@@ -75,7 +74,6 @@ function onMessage(m) {
     // Événement: La partie est terminée
     else if (data.state === GameState.Finished) {
         document.removeEventListener('keydown', handleKeydown);
-        listenerSet = false;
 
         view.updateStatus('Partie terminée !');
         view.displayResultList(data.players);
@@ -84,7 +82,7 @@ function onMessage(m) {
     }
 
     // Erreur
-    else if (data.type === 'error' || data.ok === false) {
+    else if (data.type === 'error') {
         console.error('WebSocket Error:', error);
         view.updateStatus('Erreur serveur', true);
     } else {
