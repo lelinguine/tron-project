@@ -7,7 +7,7 @@
 - ✅ Afficher un message de fin de partie indiquant le gagnant.
 - ✅ Ajouter la possibilité d'annuler la file d'attente.
 - ✅ Déconnection
-- Possibilité de rejoindre une partie spécifique (avec id de partie).
+- ✅ Possibilité de rejoindre une partie spécifique (avec id de partie).
 - ✅ Leaderboard des meilleurs joueurs (par nombre de victoires).
 
 ## Bonus

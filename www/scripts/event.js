@@ -45,14 +45,16 @@ function onMessage(m) {
 
     //  Événement: attente je joueur
     else if (data.state === GameState.Waiting) {
-        view.updateStatus(data.success);
-        view.waitingState.textContent = `En attente de joueurs (${data.message})`;
+        view.updateStatus(data.message);
+        view.waitingState.textContent = `En attente de joueurs (${data.message})${
+            view.gameIdInput.value !== '' ? `, id : ${view.gameIdInput.value}` : ''
+        }`;
         goTo('waiting-section');
     }
 
     //  Événement: partie prête
     else if (data.state === GameState.Ready) {
-        if (data.message === 'Go !') {
+        if (data.message === 'Go!') {
             document.addEventListener('keydown', handleKeydown);
         }
         view.updateStatus('Partie en cours...');
@@ -62,6 +64,7 @@ function onMessage(m) {
             view.gameCounter.style.display = 'block';
             goTo('game-section');
             updateGame(data.players);
+            view.gameIdInput.value = '';
         }
     }
 
@@ -74,7 +77,6 @@ function onMessage(m) {
     // Événement: La partie est terminée
     else if (data.state === GameState.Finished) {
         document.removeEventListener('keydown', handleKeydown);
-
         view.updateStatus('Partie terminée !');
         view.displayResultList(data.players);
         view.quitBtn.style.display = 'block';
@@ -82,7 +84,10 @@ function onMessage(m) {
     }
 
     // Erreur
-    else if (data.type === 'error') {
+    else if (data.ok === false) {
+        console.error('WebSocket Error:', data.error);
+        view.updateStatus(data.error, true);
+    } else if (data.type === 'error') {
         console.error('WebSocket Error:', error);
         view.updateStatus('Erreur serveur', true);
     } else {

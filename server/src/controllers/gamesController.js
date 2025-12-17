@@ -30,6 +30,13 @@ export function handleJoinGame(data, connection) {
         };
     }
 
+    if (gameId && gameId.length !== 4) {
+        return {
+            ok: false,
+            error: 'Identifiant de partie invalide, 4 lettres nécessaires.'
+        };
+    }
+
     // Ajout du joueur dans la file d'attente
     gameManager.addPlayerToQueue(connection, username, mode, gameId);
 }

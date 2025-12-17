@@ -62,10 +62,11 @@ class Game {
      *
      * @param {number} maxPlayers - Le nombre maximum de joueurs.
      * @param {(game: Game) => Promise} onEnd - La fonction appelée à la fin de la partie.
+     * @param {string} [id] - L'identifiant de la partie (optionnel).
      * @memberof Game
      */
-    constructor(maxPlayers, onEnd) {
-        this._id = Math.random().toString(36).substring(2, 9);
+    constructor(maxPlayers, onEnd, id) {
+        this._id = id ?? Math.random().toString(36).substring(2, 9);
         this._players = new Map();
         this._state = GameState.Waiting;
         this._maxPlayers = maxPlayers;
@@ -137,6 +138,16 @@ class Game {
      */
     get state() {
         return this._state;
+    }
+
+    /**
+     * L'état actuel de la partie.
+     *
+     * @readonly
+     * @memberof Game
+     */
+    get maxPlayers() {
+        return this._maxPlayers;
     }
 
     /**

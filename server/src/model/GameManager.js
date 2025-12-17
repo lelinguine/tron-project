@@ -29,6 +29,12 @@ class GameManager {
      */
     _waitingGame4Players;
     /**
+     * La map des parties personnalisées en attente (clé: id de la partie, valeur: instance de Game).
+     *
+     * @memberof GameManager
+     */
+    _customWaitingGames;
+    /**
      * La map des joueurs vers leurs parties (clé: username, valeur: id de la partie).
      *
      * @type {Map<string, string>}
@@ -52,6 +58,7 @@ class GameManager {
         this._games = new Map();
         this._playerGameMap = new Map();
         this._connectionUserMap = new Map();
+        this._customWaitingGames = new Map();
 
         this.onGameEnd = this.onGameEnd.bind(this);
 
@@ -74,7 +81,7 @@ class GameManager {
         // Envoi de la partie
         if (this._waitingGame2Players.id === gameId) return this._waitingGame2Players;
         if (this._waitingGame4Players.id === gameId) return this._waitingGame4Players;
-        return this._games.get(gameId);
+        return this._games.get(gameId) ?? this._customWaitingGames.get(gameId);
     }
 
     /**
@@ -83,10 +90,33 @@ class GameManager {
      * @param {import('websocket').connection} connection - La connexion WebSocket du joueur.
      * @param {string} username - Le nom d'utilisateur du joueur.
      * @param {number} maxPlayers - Le nombre maximum de joueurs (2 ou 4).
+     * @param {string} [gameId] - L'identifiant de la partie personnalisée (optionnel).
      * @memberof GameManager
      */
-    addPlayerToQueue(connection, username, maxPlayers) {
-        const game = maxPlayers === 4 ? this._waitingGame4Players : this._waitingGame2Players;
+    addPlayerToQueue(connection, username, maxPlayers, gameId) {
+        let game;
+
+        if (gameId) {
+            if (this._games.has(gameId)) {
+                // La partie existe déjà et est en cours
+                connection.sendUTF(
+                    JSON.stringify({
+                        type: 'error',
+                        error: 'La partie est déjà en cours.'
+                    })
+                );
+                return;
+            }
+
+            game = this._customWaitingGames.get(gameId);
+
+            if (!game) {
+                game = new Game(maxPlayers, this.onGameEnd, gameId);
+                this._customWaitingGames.set(gameId, game);
+            }
+        } else {
+            game = maxPlayers === 4 ? this._waitingGame4Players : this._waitingGame2Players;
+        }
 
         // Ajoute le joueur
         game.addPlayer(connection, username);
@@ -96,11 +126,14 @@ class GameManager {
         this._connectionUserMap.set(connection, username);
 
         // Si la partie est pleine
-        if (game.nbPlayers === maxPlayers) {
+        if (game.nbPlayers === game.maxPlayers) {
             // Ajoute la partie pleine à la liste des parties
             this._games.set(game.id, game);
+            if (gameId) {
+                this._customWaitingGames.delete(gameId);
+            }
             // Création d'une nouvelle partie en attente
-            if (maxPlayers === 4) {
+            else if (maxPlayers === 4) {
                 this._waitingGame4Players = new Game(4, this.onGameEnd);
             } else {
                 this._waitingGame2Players = new Game(2, this.onGameEnd);
@@ -132,6 +165,8 @@ class GameManager {
             waitingGame = this._waitingGame2Players;
         } else if (gameId === this._waitingGame4Players.id) {
             waitingGame = this._waitingGame4Players;
+        } else if (this._customWaitingGames.has(gameId)) {
+            waitingGame = this._customWaitingGames.get(gameId);
         } else {
             return;
         }
@@ -139,13 +174,18 @@ class GameManager {
         // Retire le joueur de la partie
         waitingGame.removePlayer(username);
 
+        // Supprime la partie personnalisée si elle est vide
+        if (this._customWaitingGames.has(gameId) && waitingGame.nbPlayers === 0) {
+            this._customWaitingGames.delete(gameId);
+        }
+
         // Nettoyage des mappings
         this._connectionUserMap.delete(connection);
         this._playerGameMap.delete(username);
 
         // Notifie les autres joueurs du changement du nombre de joueurs
         if (waitingGame.nbPlayers > 0) {
-            waitingGame.broadcastToPlayers(`${waitingGame.nbPlayers}/${waitingGame._maxPlayers}`);
+            waitingGame.broadcastToPlayers(`${waitingGame.nbPlayers}/${waitingGame.maxPlayers}`);
         }
     }
 
@@ -168,7 +208,11 @@ class GameManager {
             return;
         }
 
-        if (game.id === this._waitingGame2Players.id || game.id === this._waitingGame4Players.id) {
+        if (
+            game.id === this._waitingGame2Players.id ||
+            game.id === this._waitingGame4Players.id ||
+            this._customWaitingGames.has(game.id)
+        ) {
             // Le joueur était dans une file d'attente
             this.removePlayerFromQueue(connection);
             return;
@@ -203,18 +247,25 @@ class GameManager {
         await saveGame(game);
 
         // Suppression des mappings pour tous les joueurs de cette partie
+        const usersToRemove = [];
         for (const [username, id] of this._playerGameMap.entries()) {
             if (id === game.id) {
-                this._playerGameMap.delete(username);
+                usersToRemove.push(username);
             }
+        }
+        for (let i = 0; i < usersToRemove.length; i++) {
+            this._playerGameMap.delete(usersToRemove[i]);
         }
 
         // Suppression des mappings pour toutes les connexions de cette partie
+        const connectionsToRemove = [];
         for (const [connection, username] of this._connectionUserMap.entries()) {
-            const playerGameId = this._playerGameMap.get(username);
-            if (playerGameId === game.id) {
-                this._connectionUserMap.delete(connection);
+            if (usersToRemove.includes(username)) {
+                connectionsToRemove.push(connection);
             }
+        }
+        for (let i = 0; i < connectionsToRemove.length; i++) {
+            this._connectionUserMap.delete(connectionsToRemove[i]);
         }
 
         // Suppression de la partie

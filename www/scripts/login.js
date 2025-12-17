@@ -12,6 +12,13 @@ if (username) {
 // Connection
 view.loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    // Vérification que les champs ne sont pas vides
+    if (view.usernameInput.value === '' || view.passwordInput.value === '') {
+        view.updateStatus('Veuillez remplir tous les champs', true);
+        return;
+    }
+
     // Envoi des informations de connexion au serveur
     ws.send(
         JSON.stringify({

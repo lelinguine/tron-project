@@ -1,6 +1,6 @@
 // Envoi de la requête pour rejoindre une partie
 view.playBtn.addEventListener('click', () =>
-    ws.send(JSON.stringify({ type: RequestType.JoinGame, username, mode: selectedMode }))
+    ws.send(JSON.stringify({ type: RequestType.JoinGame, username, mode: selectedMode, gameId: view.gameIdInput.value }))
 );
 
 /**
