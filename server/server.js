@@ -65,8 +65,6 @@ wsServer.on('request', (request) => {
             result = { type: 'error', error: 'Erreur serveur.' };
         }
 
-        console.log(result);
-
         if (result) {
             connection.sendUTF(JSON.stringify(result));
         }

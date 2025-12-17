@@ -29,6 +29,9 @@ export async function getGames() {
  */
 export async function saveGame(game) {
     try {
+        // Connexion à la base de données
+        await connectDb();
+
         return await GameModel.create({
             players: game.playersArray.map((player) => ({
                 username: player.username,
