@@ -52,7 +52,7 @@ function onMessage(m) {
 
     //  Événement: partie prête
     else if (data.state === GameState.Ready) {
-        if (message === 1) {
+        if (data.message === 'Go !') {
             document.addEventListener('keydown', handleKeydown);
         }
         view.updateStatus('Partie en cours...');
