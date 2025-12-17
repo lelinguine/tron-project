@@ -13,10 +13,9 @@ const gameManager = new GameManager();
  *
  */
 export function handleJoinGame(data, connection) {
-    const { username, mode = 2 } = data;
+    const { username, mode, gameId } = data;
 
-    console.log(`User ${username} is trying to join a game.`);
-
+    // Validation des données
     if (!username) {
         return {
             ok: false,
@@ -24,8 +23,15 @@ export function handleJoinGame(data, connection) {
         };
     }
 
+    if (mode !== 2 && mode !== 4) {
+        return {
+            ok: false,
+            error: 'Mode de jeu invalide.'
+        };
+    }
+
     // Ajout du joueur dans la file d'attente
-    gameManager.addPlayerToQueue(connection, username, mode);
+    gameManager.addPlayerToQueue(connection, username, mode, gameId);
 }
 
 export function handleLeaveQueue(connection) {

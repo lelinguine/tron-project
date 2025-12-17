@@ -1,10 +1,17 @@
+/**
+ * Le nom de l'utilisateur actuellement connecté.
+ *
+ * @type {(string | null)}
+ */
 let username = localStorage.getItem('username');
 
 if (username) {
-    view.welcomeMessage.textContent = `Bienvenue ${username}`;
+    onConnected(false);
 }
 
-function connect() {
+// Connection
+view.loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
     // Envoi des informations de connexion au serveur
     ws.send(
         JSON.stringify({
@@ -13,31 +20,30 @@ function connect() {
             password: view.passwordInput.value
         })
     );
-}
-
-view.loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    connect();
 });
 
-function onConnected() {
-    view.updateStatus('<p>Utilisateur connecté</p>');
+/**
+ * Actions à effectuer une fois connecté.
+ *
+ * @param {boolean} [goToLobby=true] - Indique si l'on doit aller au lobby.
+ */
+function onConnected(goToLobby = true) {
+    view.updateStatus('Utilisateur connecté');
     view.welcomeMessage.textContent = `Bienvenue ${username}`;
     view.logoutBtn.style.display = 'block';
-    goTo('lobby-section');
+    if (goToLobby) goTo('lobby-section');
 }
 
-function logout() {
+view.logoutBtn.addEventListener('click', () => {
     // Fermeture de la connexion
     ws.close();
-    ws = new WebSocket('ws://localhost:9898');
-    view.updateStatus('<p>Déconnecté</p>');
+    view.updateStatus('Déconnecté');
     view.logoutBtn.style.display = 'none';
     // Suppression du nom d'utilisateur stocké
     username = null;
     localStorage.removeItem('username');
     // Retour à l'écran d'accueil
     goTo('enter-section');
-}
-
-view.logoutBtn.addEventListener('click', logout);
+    // Création d'une nouvelle connexion WebSocket
+    newWebSocket();
+});

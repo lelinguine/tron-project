@@ -105,7 +105,7 @@ class GameManager {
             } else {
                 this._waitingGame2Players = new Game(2, this.onGameEnd);
             }
-            // Démarre la partie (change state à 'playing' et lance la boucle)
+            // Démarre la partie
             game.start();
         } else {
             game.broadcastToPlayers(`${game.nbPlayers}/${maxPlayers}`);

@@ -172,7 +172,8 @@ class Game {
                           x: GAME_SIZE - Math.floor(GAME_SIZE / 5),
                           y: Math.floor(GAME_SIZE / 2)
                       },
-                this.nbPlayers % 2 === 0 ? Direction.Right : Direction.Left
+                this.nbPlayers % 2 === 0 ? Direction.Right : Direction.Left,
+                this._maxPlayers
             )
         );
     }
@@ -391,6 +392,7 @@ class Game {
     /**
      * Envoie l'état de la partie à tous les joueurs.
      *
+     * @param {string} [message] - Un message optionnel à envoyer aux joueurs.
      * @memberof Game
      */
     broadcastToPlayers(message) {
@@ -405,6 +407,7 @@ class Game {
     /**
      * Convertit la partie en un format adapté pour le client.
      *
+     * @param {string} [message] - Un message optionnel à inclure.
      * @return {string} La partie lisible pour le client.
      * @memberof Game
      */
@@ -412,7 +415,7 @@ class Game {
         return JSON.stringify({
             players: this.playersArray.map((player) => player.toClient()),
             state: this._state,
-            message: message || 'none'
+            message: message ?? 'none'
         });
     }
 }

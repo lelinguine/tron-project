@@ -79,6 +79,19 @@ input:focus,
     cursor: not-allowed;
 }
 
+#game-section {
+    position: relative;
+}
+
+#game-counter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    font-size: 6rem;
+}
+
 #logout-button {
     display: none;
 
@@ -101,8 +114,4 @@ input:focus,
     transform: unset;
 
     font-size: 1.2rem;
-}
-
-#rank-list {
-    list-style: none;
 }

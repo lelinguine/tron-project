@@ -1,5 +1,4 @@
 import brcypt from 'bcrypt';
-import connectDb from '../lib/db.js';
 import { createUser, getUserByName } from '../lib/user.js';
 
 /**
@@ -20,8 +19,6 @@ export async function handleLogin(data) {
     }
 
     try {
-        // Connexion à la base de données
-        await connectDb();
         // Récupération de l'utilisateur
         let user = await getUserByName(username);
 

@@ -1,8 +1,7 @@
-function join() {
-    ws.send(JSON.stringify({ type: RequestType.JoinGame, username, mode: selectedMode }));
-}
-
-view.playBtn.addEventListener('click', join);
+// Envoi de la requête pour rejoindre une partie
+view.playBtn.addEventListener('click', () =>
+    ws.send(JSON.stringify({ type: RequestType.JoinGame, username, mode: selectedMode }))
+);
 
 /**
  * Le mode de jeu sélectionné (nombre de joueurs par partie).
@@ -11,7 +10,8 @@ view.playBtn.addEventListener('click', join);
  */
 let selectedMode = 2;
 
-function switchMode() {
+// Changement du mode de jeu entre 1v1 et 4 joueurs
+view.selectModeBtn.addEventListener('click', () => {
     if (selectedMode === 2) {
         selectedMode = 4;
         view.selectModeBtn.textContent = 'Mode : 4 joueurs';
@@ -19,20 +19,21 @@ function switchMode() {
         selectedMode = 2;
         view.selectModeBtn.textContent = 'Mode : 1v1';
     }
-}
+});
 
-view.selectModeBtn.addEventListener('click', switchMode);
+// Annulation de la recherche de partie
+view.cancelBtn.addEventListener('click', () => {
+    ws.send(JSON.stringify({ type: RequestType.LeaveQueue }));
+    quit();
+});
 
+/**
+ * Quitte la partie lorsqu'elle est finie.
+ *
+ */
 function quit() {
-    view.updateStatus('<p>Utilisateur connecté</p>');
+    view.updateStatus('Utilisateur connecté');
     goTo('lobby-section');
 }
 
 view.quitBtn.addEventListener('click', quit);
-
-function cancelJoin() {
-    ws.send(JSON.stringify({ type: RequestType.LeaveQueue }));
-    quit();
-}
-
-view.cancelBtn.addEventListener('click', cancelJoin);

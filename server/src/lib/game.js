@@ -1,4 +1,5 @@
 import GameModel from '../schemas/Game.js';
+import connectDb from './db.js';
 
 /**
  * Récupère toutes les parties sauvegardées dans la base de données.
@@ -8,6 +9,9 @@ import GameModel from '../schemas/Game.js';
  */
 export async function getGames() {
     try {
+        // Connexion à la base de données
+        await connectDb();
+
         return await GameModel.find().lean();
     } catch (error) {
         // Log error

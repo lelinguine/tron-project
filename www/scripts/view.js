@@ -1,3 +1,6 @@
+/**
+ * Objets contenant les références aux éléments de l'interface utilisateur.
+ */
 const view = {
     // Global
     /**
@@ -16,8 +19,17 @@ const view = {
     startBtn: document.getElementById('start'),
 
     // Login
+    /**
+     * @type {HTMLFormElement}
+     */
     loginForm: document.getElementById('login'),
+    /**
+     * @type {HTMLInputElement}
+     */
     usernameInput: document.getElementById('user_username'),
+    /**
+     * @type {HTMLInputElement}
+     */
     passwordInput: document.getElementById('user_password'),
 
     // Lobby
@@ -54,28 +66,38 @@ const view = {
      */
     gameBoard: document.getElementById('game-board'),
     /**
+     * @type {HTMLElement}
+     */
+    gameCounter: document.getElementById('game-counter'),
+
+    // Result
+    /**
+     * @type {HTMLUListElement}
+     */
+    resultList: document.getElementById('result-list'),
+    /**
      * @type {HTMLButtonElement}
      */
     quitBtn: document.getElementById('quit-button'),
 
-    // Result
-    /**
-     * @type {HTMLElement}
-     */
-    resultList: document.getElementById('result-list'),
-
     // Rank
+    /**
+     * @type {HTMLUListElement}
+     */
     rankList: document.getElementById('rank-list'),
+    /**
+     * @type {HTMLButtonElement}
+     */
     openRankBtn: document.getElementById('open-rank-button'),
 
     /**
      * Met à jour le statut affiché à l'utilisateur.
      *
-     * @param {string} inner - Le contenu HTML à afficher.
+     * @param {string} text - Le contenu HTML à afficher.
      * @param {boolean} [error=false] - Indique si le message est une erreur.
      */
-    updateStatus(inner, error = false) {
-        this.status.innerHTML = inner;
+    updateStatus(text, error = false) {
+        this.status.innerHTML = `<p>${text}</p>`;
         if (error) {
             this.status.classList.add('failed');
         } else {
@@ -90,13 +112,38 @@ const view = {
      */
     displayResultList(players) {
         // Trier les joueurs par rang
-        const orderedPlayers = players.sort((a, b) => a.rank - b.rank);
+        const orderedPlayers = players.sort((a, b) => {
+            return a.rank === b.rank ? a.score - b.score : a.rank - b.rank;
+        });
         // Vider la liste actuelle
         this.resultList.innerHTML = '';
         // Ajouter chaque joueur à la liste
         for (let i = 0; i < orderedPlayers.length; i++) {
             const player = orderedPlayers[i];
-            this.resultList.innerHTML += `<li>${player.username} : ${player.score} points</li>`;
+            this.resultList.innerHTML += `<li>${player.rank}${player.rank === 1 ? 'er' : 'ème'} ${
+                player.username
+            } : ${player.score} points</li>`;
+        }
+    },
+
+    /**
+     * Affiche la liste des joueurs classés.
+     *
+     * @param {({ username: string; victories: number; totalScore: number; })[]} ranks - La liste des joueurs classés.
+     */
+    displayRank(ranks) {
+        this.rankList.innerHTML = '';
+
+        if (ranks.length === 0) {
+            this.rankList.innerHTML = "Aucune partie jouée pour l'instant";
+            return;
+        }
+
+        for (let i = 0; i < ranks.length; i++) {
+            const player = ranks[i];
+            this.rankList.innerHTML += `<li>${i + 1} : ${player.username} : ${
+                player.victories
+            } victoire${player.victories > 1 ? 's' : ''}, ${player.totalScore} points</li>`;
         }
     }
 };

@@ -19,7 +19,7 @@ export const KILL_MULTIPLIER = 5;
  * Le bonus de points en fonction du rang final et du nombre de joueurs.
  *
  * @export
- * @type {{ [key: number]: number[] }}
+ * @type {Record<number, number[]>}
  */
 export const RANK_BONUS = {
     [2]: [10, 0],

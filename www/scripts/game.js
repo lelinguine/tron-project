@@ -1,3 +1,8 @@
+/**
+ * Met à jour l'affichage du jeu avec les informations des joueurs.
+ *
+ * @param {object[]} players - La liste des joueurs.
+ */
 function updateGame(players) {
     view.gameBoard.innerHTML = '';
 
@@ -150,12 +155,15 @@ function updateGame(players) {
     view.gameBoard.appendChild(svg);
 }
 
+/**
+ * Gestionnaire des événements de touche enfoncée.
+ *
+ * @param {KeyboardEvent} event - L'événement de touche.
+ */
 function handleKeydown(event) {
-    // Récupère le username depuis le localStorage
-    const username = localStorage.getItem('username');
-    if (!username) return;
-
     let direction = null;
+
+    console.log(event)
 
     switch (event.key) {
         case 'ArrowUp':
@@ -180,11 +188,11 @@ function handleKeydown(event) {
         ws.send(
             JSON.stringify({
                 type: RequestType.ChangeDirection,
-                username: username,
+                username,
                 newDirection: direction
             })
         );
     }
 }
 
-let listenetSet = false;
+let listenerSet = false;

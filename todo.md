@@ -8,7 +8,7 @@
 - ✅ Ajouter la possibilité d'annuler la file d'attente.
 - ✅ Déconnection
 - Possibilité de rejoindre une partie spécifique (avec id de partie).
-- Leaderboard des meilleurs joueurs (par nombre de victoires).
+- ✅ Leaderboard des meilleurs joueurs (par nombre de victoires).
 
 ## Bonus
 

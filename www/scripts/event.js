@@ -1,12 +1,29 @@
 let ws = new WebSocket('ws://localhost:9898');
 
-ws.onopen = function () {
-    view.updateStatus('<p>Serveur connecté</p>');
-};
+/**
+ * Création d'une nouvelle connexion WebSocket.
+ */
+function newWebSocket() {
+    ws = new WebSocket('ws://localhost:9898');
+    ws.onopen = onConnected;
+    ws.onmessage = onMessage;
+    ws.onerror = onError;
+}
 
-// Gestionnaire global des messages WebSocket
-ws.onmessage = function (e) {
-    const data = JSON.parse(e.data);
+/**
+ * Gestionnaire de la connexion WebSocket établie.
+ */
+function onConnected() {
+    view.updateStatus('Serveur connecté');
+}
+
+/**
+ * Gestionnaire des messages WebSocket.
+ *
+ * @param {MessageEvent<string>} m - L'Événement de message.
+ */
+function onMessage(m) {
+    const data = JSON.parse(m.data);
 
     // Événement: Réponse de login
     if (data.type === 'login') {
@@ -17,65 +34,72 @@ ws.onmessage = function (e) {
             // Mise à jour de l'interface
             onConnected();
         } else {
-            view.updateStatus(`<p>${data.error}</p>`, true);
+            view.updateStatus(data.error, true);
         }
     }
 
     // Événement: Reçu du classement
     if (data.type === 'rank') {
-        if (data.ok) {
-            // Stockage du nom d'utilisateur
-            username = data.user.username;
-            localStorage.setItem('username', username);
-            // Mise à jour de l'interface
-            onConnected();
-        } else {
-            view.updateStatus(`<p>${data.error}</p>`, true);
-        }
+        view.displayRank(data.ranks);
     }
 
     //  Événement: attente je joueur
     else if (data.state === GameState.Waiting) {
-        view.updateStatus(`<p>${data.success}</p>`);
+        view.updateStatus(data.success);
         view.waitingState.textContent = `En attente de joueurs (${data.message})`;
         goTo('waiting-section');
     }
 
     //  Événement: partie prête
     else if (data.state === GameState.Ready) {
-        if (!listenetSet) {
+        if (!listenerSet) {
             document.addEventListener('keydown', handleKeydown);
-            listenetSet = true;
+            listenerSet = true;
         }
-
-        view.updateStatus(`<p>${data.message}</p>`);
-        goTo('game-section');
-
-        view.updateStatus(data.message);
-        updateGame(data.players);
+        view.updateStatus('Partie en cours...');
+        // Affichage du conmpteur
+        view.gameCounter.textContent = data.message;
+        if (currentPage.id !== 'game-section') {
+            view.gameCounter.style.display = 'block';
+            goTo('game-section');
+            updateGame(data.players);
+        }
     }
 
     // Événement: La partie démarre
     else if (data.state === GameState.Playing) {
-        goTo('game-section');
+        view.gameCounter.style.display = 'none';
         updateGame(data.players);
     }
 
     // Événement: La partie est terminée
     else if (data.state === GameState.Finished) {
         document.removeEventListener('keydown', handleKeydown);
-        listenetSet = false;
+        listenerSet = false;
 
-        view.updateStatus('<p>Partie terminée !</p>');
+        view.updateStatus('Partie terminée !');
         view.displayResultList(data.players);
         view.quitBtn.style.display = 'block';
         goTo('result-section');
+    }
+
+    // Erreur
+    else if (data.type === 'error' || data.ok === false) {
+        console.error('WebSocket Error:', error);
+        view.updateStatus('Erreur serveur', true);
     } else {
         console.warn('Type de message inconnu:', data);
     }
-};
+}
 
-ws.onerror = function (error) {
+/**
+ * Gestionnaire des erreurs WebSocket.
+ *
+ * @param {unknown} error - L'Erreur.
+ */
+function onError(error) {
     console.error('WebSocket Error:', error);
-    view.updateStatus('<p>Erreur de connexion</p>', true);
-};
+    view.updateStatus('Erreur de connexion', true);
+}
+
+newWebSocket();

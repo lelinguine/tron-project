@@ -53,7 +53,7 @@ wsServer.on('request', (request) => {
                     break;
 
                 case RequestType.GetDashboard:
-                    result = handleGetDashboard();
+                    result = await handleGetDashboard();
                     break;
 
                 default:
@@ -62,8 +62,10 @@ wsServer.on('request', (request) => {
             }
         } catch (error) {
             console.error(error);
-            result = { error: 'Message invalide' };
+            result = { type: 'error', error: 'Erreur serveur.' };
         }
+
+        console.log(result);
 
         if (result) {
             connection.sendUTF(JSON.stringify(result));

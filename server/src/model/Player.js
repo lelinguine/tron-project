@@ -72,6 +72,13 @@ class Player {
      * @memberof Player
      */
     rank;
+    /**
+     * Le nombre de joueurs dans la partie (pour le calcul du score).
+     *
+     * @type {number}
+     * @memberof Player
+     */
+    _nbPlayersInGame;
 
     /**
      * Crée une nouvelle instance de {@link Player}.
@@ -81,14 +88,16 @@ class Player {
      * @param {string} color - La couleur du joueur.
      * @param {{ x: number; y: number; }} position - La position initiale du joueur.
      * @param {Direction} direction - La direction initiale du joueur.
+     * @param {number} nbPlayersInGame - Le nombre de joueurs dans la partie.
      * @memberof Player
      */
-    constructor(connection, username, color, position, direction) {
+    constructor(connection, username, color, position, direction, nbPlayersInGame) {
         this._connection = connection;
         this._username = username;
         this._color = color;
         this._position = position;
         this._direction = direction;
+        this._nbPlayersInGame = nbPlayersInGame;
         this.trail = [{ ...position }];
         this._kills = 0;
         this._isAlive = true;
@@ -181,7 +190,7 @@ class Player {
         return (
             this.trail.length +
             this._kills * KILL_MULTIPLIER +
-            (this.rank ? RANK_BONUS[this.rank] ?? 0 : 0)
+            (this.rank ? RANK_BONUS[this._nbPlayersInGame][this.rank - 1] : 0)
         );
     }
 
