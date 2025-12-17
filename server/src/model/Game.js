@@ -46,6 +46,7 @@ class Game {
     /**
      * Les couleurs disponibles pour les joueurs.
      *
+     * @type {string[]}
      * @memberof Game
      */
     _availableColors;
