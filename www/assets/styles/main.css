@@ -4,10 +4,10 @@
     right: 50px;
 }
 
-#status.failed p, #logout-button {
+#status.failed p,
+#logout-button {
     color: var(--error-color);
-    text-shadow:
-        0 0 calc(var(--text-shadow) / 4) var(--error-color),
+    text-shadow: 0 0 calc(var(--text-shadow) / 4) var(--error-color),
         0 0 calc(var(--text-shadow) / 2) var(--error-color),
         0 0 calc(var(--text-shadow) / 2) var(--error-color);
 }
@@ -59,7 +59,7 @@ section {
 
 button {
     position: absolute;
-    bottom: 50px;
+    bottom: 3.125rem;
     left: 50%;
     transform: translateX(-50%);
     cursor: pointer;
@@ -97,16 +97,43 @@ input:focus,
 
 #logout-button {
     display: none;
-    top: unset;
+    top: 3.125rem;
     right: unset;
-    left: 50px;
+    left: 3.125rem;
+    bottom: unset;
     transform: unset;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+
+#logout-button svg {
+    width: 2rem;
+    width: 2rem;
 }
 
 #open-rank-button {
-    top: 50px;
-    right: 50px;
+    top: 3.125rem;
+    right: 3.125rem;
     bottom: unset;
     left: unset;
     transform: unset;
+}
+
+#rank-list {
+    max-height: 55vh;
+    overflow: auto;
+}
+
+@media screen and (max-width: 900px) {
+    #status {
+        width: 100%;
+        
+        font-size: 0.5rem;
+        text-align: center;
+
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }

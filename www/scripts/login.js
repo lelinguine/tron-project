@@ -40,7 +40,7 @@ view.loginForm.addEventListener('submit', (e) => {
 function onConnected(goToLobby = true) {
     view.updateStatus('Utilisateur connecté.');
     view.welcomeMessage.textContent = `Bienvenue ${username} 👋🏻`;
-    view.logoutBtn.style.display = 'block';
+    view.logoutBtn.style.display = 'flex';
     if (goToLobby) goTo('lobby-section');
 }
 
