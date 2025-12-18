@@ -54,7 +54,7 @@ section {
 
 #select-button,
 #restart-button {
-    bottom: 105px;
+    bottom: 125px;
 }
 
 button {
@@ -135,5 +135,10 @@ input:focus,
         bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
+    }
+
+    #select-button,
+    #restart-button {
+        bottom: 105px;
     }
 }
