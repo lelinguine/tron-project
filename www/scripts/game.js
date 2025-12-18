@@ -164,14 +164,23 @@ function updateGame(players) {
 function handleKeydown(event) {
     let direction = null;
 
-    if (event.key === 'ArrowUp' || event.key === 'z') {
-        direction = Direction.Up;
-    } else if (event.key === 'ArrowDown' || event.key === 's') {
-        direction = Direction.Down;
-    } else if (event.key === 'ArrowLeft' || event.key === 'q') {
-        direction = Direction.Left;
-    } else if (event.key === 'ArrowRight' || event.key === 'd') {
-        direction = Direction.Right;
+    switch (event.key) {
+        case 'ArrowUp':
+        case 'z':
+            direction = Direction.Up;
+            break;
+        case 'ArrowDown':
+        case 's':
+            direction = Direction.Down;
+            break;
+        case 'ArrowLeft':
+        case 'q':
+            direction = Direction.Left;
+            break;
+        case 'ArrowRight':
+        case 'd':
+            direction = Direction.Right;
+            break;
     }
 
     if (direction) {

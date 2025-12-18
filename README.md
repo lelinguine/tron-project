@@ -20,7 +20,7 @@
 - MongoDB : https://www.mongodb.com/try/download/community
 - Cordova : https://cordova.apache.org/docs/en/13.x-2025.11/guide/cli/installation.html
 
-# 💿 - Run *Client*
+## 💿 - Run *Client*
 
 ```bash
 npm install
@@ -32,7 +32,7 @@ cordova platform add browser
 cordova run browser
 ```
 
-# 💿 - Run *Server*
+## 💿 - Run *Server*
 
 ```bash
 cd ./server
