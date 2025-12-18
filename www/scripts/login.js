@@ -15,7 +15,7 @@ view.loginForm.addEventListener('submit', (e) => {
 
     // Vérification que les champs ne sont pas vides
     if (view.usernameInput.value === '' || view.passwordInput.value === '') {
-        view.updateStatus('Veuillez remplir tous les champs', true);
+        view.updateStatus('Veuillez saisir tous les champs.', true);
         return;
     }
 
@@ -29,7 +29,6 @@ view.loginForm.addEventListener('submit', (e) => {
     );
 
     // Réinitialisation des champs du formulaire
-    view.usernameInput.value = '';
     view.passwordInput.value = '';
 });
 
@@ -39,8 +38,8 @@ view.loginForm.addEventListener('submit', (e) => {
  * @param {boolean} [goToLobby=true] - Indique si l'on doit aller au lobby.
  */
 function onConnected(goToLobby = true) {
-    view.updateStatus('Utilisateur connecté');
-    view.welcomeMessage.textContent = `Bienvenue ${username}`;
+    view.updateStatus('Utilisateur connecté.');
+    view.welcomeMessage.textContent = `Bienvenue ${username} 👋🏻`;
     view.logoutBtn.style.display = 'block';
     if (goToLobby) goTo('lobby-section');
 }

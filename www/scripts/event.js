@@ -1,10 +1,10 @@
-let ws = new WebSocket('ws://localhost:9898');
+let ws = new WebSocket(config.websocketUrl);
 
 /**
  * Création d'une nouvelle connexion WebSocket.
  */
 function newWebSocket() {
-    ws = new WebSocket('ws://localhost:9898');
+    ws = new WebSocket(config.websocketUrl);
     ws.onopen = onOpen;
     ws.onmessage = onMessage;
     ws.onerror = onError;
@@ -14,7 +14,7 @@ function newWebSocket() {
  * Gestionnaire de la connexion WebSocket établie.
  */
 function onOpen() {
-    view.updateStatus('Serveur connecté');
+    view.updateStatus('Serveur connecté.');
 }
 
 /**
@@ -45,8 +45,7 @@ function onMessage(m) {
 
     //  Événement: attente je joueur
     else if (data.state === GameState.Waiting) {
-        view.updateStatus(data.message);
-        view.waitingState.textContent = `En attente de joueurs (${data.message})${
+        view.waitingState.textContent = `En attente de joueurs... (${data.message})${
             view.gameIdInput.value !== '' ? `, id : ${view.gameIdInput.value}` : ''
         }`;
         goTo('waiting-section');
@@ -55,11 +54,12 @@ function onMessage(m) {
     //  Événement: partie prête
     else if (data.state === GameState.Ready) {
         if (data.message === 'Go!') {
+            startTime = Date.now();
             document.addEventListener('keydown', handleKeydown);
-            // document.addEventListener('touchstart', handleTouchStart);
-            // document.addEventListener('touchend', handleTouchEnd);
+            document.addEventListener('touchstart', handleTouchStart);
+            document.addEventListener('touchend', handleTouchEnd);
         }
-        view.updateStatus('Partie en cours...');
+        view.updateStatus('00:00:00');
         // Affichage du conmpteur
         view.gameCounter.textContent = data.message;
         if (currentPage.id !== 'game-section') {
@@ -74,14 +74,14 @@ function onMessage(m) {
     else if (data.state === GameState.Playing) {
         view.gameCounter.style.display = 'none';
         updateGame(data.players);
+        updateChrono();
     }
 
     // Événement: La partie est terminée
     else if (data.state === GameState.Finished) {
         document.removeEventListener('keydown', handleKeydown);
-        // document.removeEventListener('touchstart', handleTouchStart);
-        // document.removeEventListener('touchend', handleTouchEnd);
-        view.updateStatus('Partie terminée !');
+        document.removeEventListener('touchstart', handleTouchStart);
+        document.removeEventListener('touchend', handleTouchEnd);
         view.displayResultList(data.players);
         view.quitBtn.style.display = 'block';
         goTo('result-section');

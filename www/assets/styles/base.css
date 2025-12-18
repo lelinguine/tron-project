@@ -8,7 +8,7 @@
     --secondary-color: #469ca1;
     --third-color: #dbd8be;
     --error-color: #f44336;
-    --text-shadow: 0px;
+    --text-shadow: 3px;
 }
 
 body {
@@ -33,6 +33,11 @@ span {
     font-family: "Caprasimo", sans-serif;
     color: var(--primary-color);
     margin: 0;
+    padding: 0;
+    text-shadow: 
+        0 0 calc(var(--text-shadow) / 4) var(--primary-color), 
+        0 0 calc(var(--text-shadow) / 2) var(--primary-color), 
+        0 0 calc(var(--text-shadow) / 2) var(--primary-color);
 }
 
 h1 {
@@ -53,14 +58,20 @@ ul {
 
 button,
 input {
+    padding: 10px 20px;
     font-size: 1.8rem;
     border: none;
     color: var(--secondary-color);
     border-radius: 8px;
     background-color: var(--primary-color);
     box-shadow: 0 0 4px var(--primary-color), 0 0 8px var(--primary-color);
+    text-shadow: 
+        0 0 calc(var(--text-shadow) / 4) var(--secondary-color), 
+        0 0 calc(var(--text-shadow) / 2) var(--secondary-color), 
+        0 0 calc(var(--text-shadow) / 2) var(--secondary-color);
 }
 
 ul {
     list-style: none;
+    text-align: center;
 }

@@ -135,15 +135,14 @@ const view = {
         this.rankList.innerHTML = '';
 
         if (ranks.length === 0) {
-            this.rankList.innerHTML = "Aucune partie jouée pour l'instant";
             return;
         }
 
         for (let i = 0; i < ranks.length; i++) {
             const player = ranks[i];
-            this.rankList.innerHTML += `<li>${i + 1} : ${player.username} : ${
+            this.rankList.innerHTML += `<li>${i + 1}${i + 1 === 1 ? 'er' : 'ème'}. ${player.username}, ${
                 player.victories
-            } victoire${player.victories > 1 ? 's' : ''}, ${player.totalScore} points</li>`;
+            } victoire${player.victories > 1 ? 's' : ''}, ${player.totalScore}pts</li>`;
         }
     }
 };

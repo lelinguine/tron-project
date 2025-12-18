@@ -86,7 +86,3 @@ function handleArrowUp() {
 function handleArrowDown() {
   sendDirection(Direction.Down);
 }
-
-
-document.addEventListener('touchstart', handleTouchStart);
-document.addEventListener('touchend', handleTouchEnd);

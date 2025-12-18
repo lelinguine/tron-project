@@ -19,24 +19,25 @@
 
         <section id="enter-section">
             <h1>Sheep-e-ates</h1>
-            <h2>v0.1-a</h2>
+            <h2>v0.2-a</h2>
             <button id="start">Jouer</button>
         </section>
 
         <section id="login-section">
             <form action="" id="login">
-                <h2>Connection ou inscription</h2>
-                <input id="user_username" type="text" placeholder="Nom d'utilisateur" />
+                <h2>Connexion ou inscription</h2>
+                <h3>Saisissez vos identifiants pour vous connecter ou créer un compte.</h3>
+                <input id="user_username" type="text" placeholder="Identifiant" />
                 <input id="user_password" type="password" placeholder="Mot de passe" />
                 <button type="submit">Se connecter</button>
             </form>
         </section>
 
         <section id="lobby-section">
-            <h2 id="welcome-message">Bienvenue</h2>
-            <h3>Entrez un id de partie ou rejoignez une partie au hasard</h3>
-            <input id="game-id" type="text" placeholder="Id de partie" maxlength="4" />
-            <button id="select-button">Mode : 1v1</button>
+            <h2 id="welcome-message"></h2>
+            <h3>Rejoignez une partie ou saisissez un identifiant.</h3>
+            <input id="game-id" type="text" placeholder="Numéro de partie" maxlength="4" />
+            <button id="select-button">2 joueurs</button>
             <button id="play-button">Rejoindre</button>
         </section>
 
@@ -51,17 +52,20 @@
         </section>
 
         <section id="result-section">
-            <h2>Partie terminée !</h2>
-            <h3>Classement :</h3>
-            <ul id="result-list"></ul>
+            <h2>Partie terminée.</h2>
+            <h3>Scores ✨</h3>
+            <ul id="result-list">
+                <li>Aucun résultats.</li>
+            </ul>
 
-            <button id="quit-button">Retour au lobby</button>
+            <button id="quit-button">Terminer</button>
         </section>
 
         <section id="rank-section">
-            <h2>Classement</h2>
+            <h2>Classement ✨</h2>
+            <h3>Score global de tous les joueurs.</h3>
             <ul id="rank-list">
-                <li>Aucune partie jouée pour l'instant</li>
+                <li>Aucun résultats.</li>
             </ul>
         </section>
 
@@ -73,6 +77,10 @@
 
         <script src="cordova.js"></script>
 
+        <script src="scripts/config.js"></script>
+        <script src="scripts/enums/Direction.js"></script>
+        <script src="scripts/enums/GameState.js"></script>
+        <script src="scripts/enums/RequestType.js"></script>
         <script src="scripts/view.js"></script>
         <script src="scripts/router.js"></script>
         <script src="scripts/event.js"></script>
@@ -80,9 +88,7 @@
         <script src="scripts/join.js"></script>
         <script src="scripts/game.js"></script>
         <script src="scripts/rank.js"></script>
+        <script src="scripts/timer.js"></script>
         <script src="scripts/gestures.js"></script>
-        <script src="scripts/enums/Direction.js"></script>
-        <script src="scripts/enums/GameState.js"></script>
-        <script src="scripts/enums/RequestType.js"></script>
     </body>
 </html>

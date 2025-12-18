@@ -14,10 +14,10 @@ let selectedMode = 2;
 view.selectModeBtn.addEventListener('click', () => {
     if (selectedMode === 2) {
         selectedMode = 4;
-        view.selectModeBtn.textContent = 'Mode : 4 joueurs';
+        view.selectModeBtn.textContent = '4 joueurs';
     } else {
         selectedMode = 2;
-        view.selectModeBtn.textContent = 'Mode : 1v1';
+        view.selectModeBtn.textContent = '2 joueurs';
     }
 });
 
@@ -32,7 +32,7 @@ view.cancelBtn.addEventListener('click', () => {
  *
  */
 function quit() {
-    view.updateStatus('Utilisateur connecté');
+    view.updateStatus('Serveur connecté.');
     goTo('lobby-section');
 }
 

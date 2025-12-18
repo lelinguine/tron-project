@@ -4,9 +4,10 @@
     right: 50px;
 }
 
-#status.failed p {
+#status.failed p, #logout-button {
     color: var(--error-color);
-    text-shadow: 0 0 calc(var(--text-shadow) / 4) var(--error-color),
+    text-shadow:
+        0 0 calc(var(--text-shadow) / 4) var(--error-color),
         0 0 calc(var(--text-shadow) / 2) var(--error-color),
         0 0 calc(var(--text-shadow) / 2) var(--error-color);
 }
@@ -58,7 +59,6 @@ section {
 
 button {
     position: absolute;
-    padding: 10px 20px;
     bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
@@ -67,8 +67,8 @@ button {
 
 input {
     outline: none;
-    width: 240px;
-    padding: 5px 10px;
+    width: 280px;
+    /* padding: 5px 10px; */
 }
 
 button:hover,
@@ -97,24 +97,16 @@ input:focus,
 
 #logout-button {
     display: none;
-
-    position: absolute;
     top: unset;
     right: unset;
-    bottom: 50px;
     left: 50px;
     transform: unset;
-
-    font-size: 1.2rem;
 }
 
 #open-rank-button {
-    position: absolute;
     top: 50px;
     right: 50px;
     bottom: unset;
     left: unset;
     transform: unset;
-
-    font-size: 1.2rem;
 }
