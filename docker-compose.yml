@@ -1,9 +1,10 @@
 services:
-  tron-app:
+  tron-project:
+    image: tron-project:latest
     build:
       context: .
       dockerfile: dockerfile
-    container_name: tron-app
+    container_name: tron-project
     restart: unless-stopped
     ports:
       - "9898:9898"
