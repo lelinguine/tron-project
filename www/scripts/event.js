@@ -59,7 +59,7 @@ function onMessage(m) {
             document.addEventListener('touchstart', handleTouchStart);
             document.addEventListener('touchend', handleTouchEnd);
         }
-        view.updateStatus('00:00:00');
+        view.updateStatus('00:00');
         // Affichage du conmpteur
         view.gameCounter.textContent = data.message;
         if (currentPage.id !== 'game-section') {

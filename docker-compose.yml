@@ -1,0 +1,14 @@
+services:
+  tron-app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: tron-app
+    restart: unless-stopped
+    ports:
+      - "9898:9898"
+      - "27017:27017"
+    environment:
+      - NODE_ENV=production
+      - PORT=9898
+      - MONGO_URI=mongodb://localhost:27017/tron
