@@ -15,13 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Créer le répertoire pour les données MongoDB
 RUN mkdir -p /data/db
 
-# Copier les fichiers du client
-COPY package*.json ./
-COPY config.xml ./
-COPY nodemon.json ./
-COPY www ./www
-COPY platforms ./platforms
-
 # Copier les fichiers du serveur
 COPY server ./server
 
