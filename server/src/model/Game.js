@@ -169,22 +169,26 @@ class Game {
             Math.floor(Math.random() * this._availableColors.length),
             1
         )[0];
+
+        // Définition des positions initiales selon le numéro du joueur
+        const playerIndex = this.nbPlayers;
+        const positions = [
+            { x: Math.floor(GAME_SIZE / 5), y: Math.floor(GAME_SIZE / 2), direction: Direction.Right },      // Gauche
+            { x: GAME_SIZE - Math.floor(GAME_SIZE / 5), y: Math.floor(GAME_SIZE / 2), direction: Direction.Left },  // Droite
+            { x: Math.floor(GAME_SIZE / 2), y: Math.floor(GAME_SIZE / 5), direction: Direction.Down },       // Haut
+            { x: Math.floor(GAME_SIZE / 2), y: GAME_SIZE - Math.floor(GAME_SIZE / 5), direction: Direction.Up }     // Bas
+        ];
+
+        const startPosition = positions[playerIndex % positions.length];
+
         this._players.set(
             username,
             new Player(
                 connection,
                 username,
                 color,
-                this.nbPlayers % 2 === 0
-                    ? {
-                          x: Math.floor(GAME_SIZE / 5),
-                          y: Math.floor(GAME_SIZE / 2)
-                      }
-                    : {
-                          x: GAME_SIZE - Math.floor(GAME_SIZE / 5),
-                          y: Math.floor(GAME_SIZE / 2)
-                      },
-                this.nbPlayers % 2 === 0 ? Direction.Right : Direction.Left,
+                { x: startPosition.x, y: startPosition.y },
+                startPosition.direction,
                 this._maxPlayers
             )
         );

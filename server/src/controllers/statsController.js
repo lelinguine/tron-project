@@ -35,6 +35,7 @@ export async function handleGetDashboard() {
 
     // Convertir l'objet en tableau et trier par victoires décroissant
     const ranks = Object.values(playerStats).sort((a, b) => b.victories - a.victories);
+    const top10 = ranks.slice(0, 10);
 
-    return { ranks, type: 'rank' };
+    return { ranks: top10, type: 'rank' };
 }
