@@ -23,6 +23,7 @@ export const KILL_MULTIPLIER = 5;
  */
 export const RANK_BONUS = {
     [2]: [10, 0],
+    [3]: [15, 5, 0],
     [4]: [20, 10, 5, 0]
 };
 /**

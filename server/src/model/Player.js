@@ -187,10 +187,14 @@ class Player {
      * @memberof Player
      */
     get score() {
+        const rankBonus = this.rank && RANK_BONUS[this._nbPlayersInGame]
+            ? RANK_BONUS[this._nbPlayersInGame][this.rank - 1] || 0
+            : 0;
+        
         return (
             this.trail.length +
             this._kills * KILL_MULTIPLIER +
-            (this.rank ? RANK_BONUS[this._nbPlayersInGame][this.rank - 1] : 0)
+            rankBonus
         );
     }
 
