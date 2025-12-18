@@ -165,31 +165,26 @@ function handleKeydown(event) {
     let direction = null;
 
     switch (event.key) {
-        case 'ArrowUp' || 'z':
+        case 'ArrowUp':
+        case 'z':
             direction = Direction.Up;
-            event.preventDefault();
             break;
-        case 'ArrowDown' || 's':
+        case 'ArrowDown':
+        case 's':
             direction = Direction.Down;
-            event.preventDefault();
             break;
-        case 'ArrowLeft' || 'q':
+        case 'ArrowLeft':
+        case 'q':
             direction = Direction.Left;
-            event.preventDefault();
             break;
-        case 'ArrowRight' || 'd':
+        case 'ArrowRight':
+        case 'd':
             direction = Direction.Right;
-            event.preventDefault();
             break;
     }
 
     if (direction) {
-        ws.send(
-            JSON.stringify({
-                type: RequestType.ChangeDirection,
-                username,
-                newDirection: direction
-            })
-        );
+        event.preventDefault();
+        sendDirection(direction);
     }
 }
