@@ -32,6 +32,14 @@ cordova platform add browser
 cordova run browser
 ```
 
+**for android**
+```bash
+cordova platform add android
+```
+```bash
+cordova run android
+```
+
 ## 💿 - Run *Server*
 
 ```bash
