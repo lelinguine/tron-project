@@ -13,6 +13,7 @@ function updateGame(players) {
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '100%');
     svg.setAttribute('viewBox', `0 0 ${gridSize} ${gridSize}`);
+    svg.style.pointerEvents = 'none';
 
     // Créer un defs pour le pattern
     const defs = document.createElementNS(svgNS, 'defs');

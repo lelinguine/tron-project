@@ -56,6 +56,8 @@ function onMessage(m) {
     else if (data.state === GameState.Ready) {
         if (data.message === 'Go!') {
             document.addEventListener('keydown', handleKeydown);
+            // document.addEventListener('touchstart', handleTouchStart);
+            // document.addEventListener('touchend', handleTouchEnd);
         }
         view.updateStatus('Partie en cours...');
         // Affichage du conmpteur
@@ -77,6 +79,8 @@ function onMessage(m) {
     // Événement: La partie est terminée
     else if (data.state === GameState.Finished) {
         document.removeEventListener('keydown', handleKeydown);
+        // document.removeEventListener('touchstart', handleTouchStart);
+        // document.removeEventListener('touchend', handleTouchEnd);
         view.updateStatus('Partie terminée !');
         view.displayResultList(data.players);
         view.quitBtn.style.display = 'block';
