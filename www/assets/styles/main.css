@@ -1,0 +1,112 @@
+#status {
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+}
+
+#status.failed p, #logout-button {
+    color: var(--error-color);
+    text-shadow:
+        0 0 calc(var(--text-shadow) / 4) var(--error-color),
+        0 0 calc(var(--text-shadow) / 2) var(--error-color),
+        0 0 calc(var(--text-shadow) / 2) var(--error-color);
+}
+
+#login-section,
+#lobby-section,
+#game-section,
+#waiting-section,
+#result-section,
+#rank-section {
+    display: none;
+}
+
+#game-board {
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+section {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+#login {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
+#quit-button {
+    display: none;
+}
+
+#select-button,
+#restart-button {
+    bottom: 125px;
+}
+
+button {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+}
+
+input {
+    outline: none;
+    width: 280px;
+    /* padding: 5px 10px; */
+}
+
+button:hover,
+input:focus,
+#select-button.disabled {
+    background-color: var(--third-color);
+    box-shadow: 0 0 4px var(--third-color), 0 0 8px var(--third-color);
+}
+
+#select-button.disabled {
+    cursor: not-allowed;
+}
+
+#game-section {
+    position: relative;
+}
+
+#game-counter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    font-size: 6rem;
+}
+
+#logout-button {
+    display: none;
+    top: unset;
+    right: unset;
+    left: 50px;
+    transform: unset;
+}
+
+#open-rank-button {
+    top: 50px;
+    right: 50px;
+    bottom: unset;
+    left: unset;
+    transform: unset;
+}

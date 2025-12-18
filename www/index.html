@@ -1,93 +1,94 @@
 <!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
-
 <html>
-
     <head>
-        <meta charset="utf-8">
-        <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-        <meta http-equiv="Content-Security-Policy" content="connect-src * ws: wss:; default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; media-src *; img-src 'self' data: content: https:; font-src 'self' data: https://fonts.gstatic.com; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval';">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-        <meta name="color-scheme" content="light dark">
-        <link rel="stylesheet" href="./css/base.css" />
+        <meta charset="utf-8" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="connect-src * ws: wss:; default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; media-src *; img-src 'self' data: content: https:; font-src 'self' data: https://fonts.gstatic.com; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval';"
+        />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover" />
+        <meta name="color-scheme" content="light dark" />
+        <link rel="stylesheet" href="./assets/styles/base.css" />
         <title>Sheep-e-ates</title>
     </head>
-
     <body class="app">
-
-
-        <div id="status"></div>
         <div class="grain"></div>
-        <img class="blur" src="./img/eqMZWi.png"  />
+        <img class="blur" src="./assets/eqMZWi.png" />
 
         <section id="enter-section">
             <h1>Sheep-e-ates</h1>
-            <h2>v0.1-a</h2>
-            <button onclick="goTo('enter-section', 'login-section')">> Enter <</button>
+            <h2>v0.2-a</h2>
+            <button id="start">Jouer</button>
         </section>
 
         <section id="login-section">
-            <h2>Login</h2>
-            <input id="user_username" type="text" placeholder="Username" />
-            <input id="user_password" type="password" placeholder="Password" />
-            
-
-
-            <!-- <button onclick="goTo('login-section', 'lobby-section', connect)">> Connect <</button> -->
-            <button onclick="connect()">> Connect <</button>
+            <form action="" id="login">
+                <h2>Connexion ou inscription</h2>
+                <h3>Saisissez vos identifiants pour vous connecter ou créer un compte.</h3>
+                <input id="user_username" type="text" placeholder="Identifiant" />
+                <input id="user_password" type="password" placeholder="Mot de passe" />
+                <button type="submit">Se connecter</button>
+            </form>
         </section>
 
         <section id="lobby-section">
-            <h2 id="username"></h2>
-            <input type="text" placeholder="GameId" />
-            <button>> Play <</button>
+            <h2 id="welcome-message"></h2>
+            <h3>Rejoignez une partie ou saisissez un identifiant.</h3>
+            <input id="game-id" type="text" placeholder="Numéro de partie" maxlength="4" />
+            <button id="select-button">2 joueurs</button>
+            <button id="play-button">Rejoindre</button>
         </section>
 
-        <!-- <section>
-            <input type="text" placeholder="GameId" />
-            <button>> Play</button>
-        </section> -->
-  
+        <section id="waiting-section">
+            <h3 id="waiting-state"></h3>
+            <button id="cancel-button">Annuler</button>
+        </section>
 
+        <section id="game-section">
+            <div id="game-board"></div>
+            <span id="game-counter"></span>
+        </section>
 
+        <section id="result-section">
+            <h2>Partie terminée.</h2>
+            <h3>Scores ✨</h3>
+            <ul id="result-list">
+                <li>Aucun résultats.</li>
+            </ul>
 
+            <button id="quit-button">Terminer</button>
+        </section>
+
+        <section id="rank-section">
+            <h2>Classement ✨</h2>
+            <h3>Score global de tous les joueurs.</h3>
+            <ul id="rank-list">
+                <li>Aucun résultats.</li>
+            </ul>
+        </section>
+
+        <button id="open-rank-button">Classement</button>
+
+        <button id="logout-button">Se déconnecter</button>
+
+        <div id="status"><p>Connexion en cours...</p></div>
 
         <script src="cordova.js"></script>
-        <script src="js/router.js"></script>
-        <script src="js/login.js"></script>
+
+        <script src="scripts/config.js"></script>
+        <script src="scripts/enums/Direction.js"></script>
+        <script src="scripts/enums/GameState.js"></script>
+        <script src="scripts/enums/RequestType.js"></script>
+        <script src="scripts/view.js"></script>
+        <script src="scripts/router.js"></script>
+        <script src="scripts/event.js"></script>
+        <script src="scripts/login.js"></script>
+        <script src="scripts/join.js"></script>
+        <script src="scripts/game.js"></script>
+        <script src="scripts/rank.js"></script>
+        <script src="scripts/timer.js"></script>
+        <script src="scripts/gestures.js"></script>
     </body>
-
-
-
-
-
-
-
 </html>

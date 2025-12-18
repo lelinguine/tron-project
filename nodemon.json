@@ -1,0 +1,6 @@
+{
+  "watch": ["www"],
+  "ext": "html,css,js",
+  "ignore": ["node_modules/**", "platforms/**", "plugins/**", "server/**"],
+  "exec": "cordova prepare"
+}

@@ -11,7 +11,7 @@ async function seed() {
             await createUser(`player${i}`, 'password');
             console.log(`player${i} créé`);
         }
-        
+
         console.log('Seed terminé avec succès');
         process.exit(0);
     } catch (error) {

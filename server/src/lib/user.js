@@ -1,16 +1,20 @@
-import { hash } from 'bcrypt';
-import User from '../schemas/User.js';
+import brcypt from 'bcrypt';
+import UserModel from '../schemas/User.js';
+import connectDb from './db.js';
 
 /**
  * Récupère un utilisateur depuis son nom d'utilisateur.
  *
  * @param {string} username - Le nom de l'utilisateur.
- * @return {Promise<User | null>} L'utilisateur ou `null` si il n'existe pas.
+ * @return {Promise<UserModel | null>} L'utilisateur ou `null` si il n'existe pas.
  */
-export function getUserByName(username) {
+export async function getUserByName(username) {
     try {
+        // Connexion à la base de données
+        await connectDb();
+
         // Récupération de l'utilisateur
-        return User.findOne({ username }).lean();
+        return await UserModel.findOne({ username }).lean();
     } catch (error) {
         // Log error
         console.error('Error at getUserByName:', error);
@@ -24,12 +28,15 @@ export function getUserByName(username) {
  * @export
  * @param {string} username - Le nom de l'utilisateur.
  * @param {string} password - Le mot de passe de l'utilisateur.
- * @return {Promise<User | null>} L'utilisateur a été créé, `null` sinon.
+ * @return {Promise<object | null>} L'utilisateur a été créé, `null` sinon.
  */
 export async function createUser(username, password) {
     try {
+        // Connexion à la base de données
+        await connectDb();
+
         // Création de l'utilisateur
-        return await User.create({ username, password: await hash(password, 10) });
+        return await UserModel.create({ username, password: await brcypt.hash(password, 10) });
     } catch (error) {
         // Log error
         console.error('Error at createUser:', error);

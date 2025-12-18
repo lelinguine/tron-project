@@ -2,10 +2,17 @@ import 'dotenv/config';
 import { createServer } from 'http';
 import { server as WebSocketServer } from 'websocket';
 import { PORT } from './src/config.js';
-
 import { handleLogin } from './src/controllers/authController.js';
+import {
+    handleChangeDirection,
+    handleDisconnect,
+    handleJoinGame,
+    handleLeaveQueue
+} from './src/controllers/gamesController.js';
+import { handleGetDashboard } from './src/controllers/statsController.js';
+import RequestType from './src/enums/RequestType.js';
 
-const server = createServer((req, res) => {
+const server = createServer((_, res) => {
     res.writeHead(426, { 'Content-Type': 'text/plain' });
     res.end('Upgrade Required: Use WebSocket');
 });
@@ -19,23 +26,51 @@ const wsServer = new WebSocketServer({
     httpServer: server
 });
 
-wsServer.on('request', function (request) {
+wsServer.on('request', (request) => {
     const connection = request.accept(null, request.origin);
 
-    connection.on('message', async function (message) {
+    connection.on('message', async (message) => {
+        let result;
+
         try {
             const data = JSON.parse(message.utf8Data);
-            
-            if (data.type === 'login') {
-                const result = await handleLogin(data.username, data.password);
-                connection.send(JSON.stringify(result.data));
+
+            switch (data.type) {
+                case RequestType.Login:
+                    result = await handleLogin(data);
+                    break;
+
+                case RequestType.JoinGame:
+                    result = handleJoinGame(data, connection);
+                    break;
+
+                case RequestType.LeaveQueue:
+                    result = handleLeaveQueue(connection);
+                    break;
+
+                case RequestType.ChangeDirection:
+                    result = handleChangeDirection(data, connection);
+                    break;
+
+                case RequestType.GetDashboard:
+                    result = await handleGetDashboard();
+                    break;
+
+                default:
+                    result = { error: "Type d'action invalide" };
+                    break;
             }
         } catch (error) {
-            connection.send(JSON.stringify({ error: 'Message invalide' }));
+            console.error(error);
+            result = { type: 'error', error: 'Erreur serveur.' };
+        }
+
+        if (result) {
+            connection.sendUTF(JSON.stringify(result));
         }
     });
 
-    connection.on('close', function () {
-        console.log('Client has disconnected.');
+    connection.on('close', () => {
+        handleDisconnect(connection);
     });
 });
