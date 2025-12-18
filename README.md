@@ -42,3 +42,11 @@ node src/scripts/seed.js
 ```bash
 node server.js
 ```
+
+# 🐋 - Docker
+```bash
+docker build -t tron-project .
+```
+```bash
+docker run -d -n tron-project --restart unless-stopped -p 9898:9898 -p 27017:27017 tron-project
+```
