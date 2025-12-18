@@ -54,12 +54,12 @@ section {
 
 #select-button,
 #restart-button {
-    bottom: 125px;
+    bottom: 105px;
 }
 
 button {
     position: absolute;
-    bottom: 3.125rem;
+    bottom: 4rem;
     left: 50%;
     transform: translateX(-50%);
     cursor: pointer;
@@ -97,9 +97,9 @@ input:focus,
 
 #logout-button {
     display: none;
-    top: 3.125rem;
+    top: 3.15rem;
     right: unset;
-    left: 3.125rem;
+    left: 3.15rem;
     bottom: unset;
     transform: unset;
     justify-content: center;
@@ -113,8 +113,8 @@ input:focus,
 }
 
 #open-rank-button {
-    top: 3.125rem;
-    right: 3.125rem;
+    top: 3.15rem;
+    right: 3.15rem;
     bottom: unset;
     left: unset;
     transform: unset;
